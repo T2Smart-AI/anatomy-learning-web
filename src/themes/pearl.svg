@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 800" preserveAspectRatio="xMidYMid slice">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="0.4" y2="1">
+<stop offset="0%" stop-color="#f2f6fd"/><stop offset="60%" stop-color="#e9eef9"/><stop offset="100%" stop-color="#e4ebf7"/>
+</linearGradient>
+<filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="3" stitchTiles="stitch"/>
+<feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.05 0"/></filter>
+</defs>
+<rect width="1280" height="800" fill="url(#bg)"/><radialGradient id="b240.58811869472265148.4328597970307" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#93c5fd" stop-opacity="0.28"/>
+    <stop offset="100%" stop-color="#93c5fd" stop-opacity="0"/>
+  </radialGradient>
+  <circle cx="240.6" cy="148.4" r="500" fill="url(#b240.58811869472265148.4328597970307)"/><radialGradient id="b1152.5262942933477227.4130505695939" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#6ee7b7" stop-opacity="0.28"/>
+    <stop offset="100%" stop-color="#6ee7b7" stop-opacity="0"/>
+  </radialGradient>
+  <circle cx="1152.5" cy="227.4" r="440" fill="url(#b1152.5262942933477227.4130505695939)"/><radialGradient id="b925.947039667517786.6241246648133" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#c4b5fd" stop-opacity="0.28"/>
+    <stop offset="100%" stop-color="#c4b5fd" stop-opacity="0"/>
+  </radialGradient>
+  <circle cx="925.9" cy="786.6" r="520" fill="url(#b925.947039667517786.6241246648133)"/><radialGradient id="b138.01721771480516726.351499594748" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#fbcfe8" stop-opacity="0.28"/>
+    <stop offset="100%" stop-color="#fbcfe8" stop-opacity="0"/>
+  </radialGradient>
+  <circle cx="138" cy="726.4" r="380" fill="url(#b138.01721771480516726.351499594748)"/><rect width="1280" height="800" filter="url(#grain)" opacity="0.55"/></svg>

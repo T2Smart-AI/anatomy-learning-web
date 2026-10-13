@@ -5,10 +5,13 @@ user-facing spec.
 
 ## Layout
 
-- `app.js` — wiring: search, browser, viewer, detail, quiz, bookmarks,
-  flashcards, EN/ES/FR/LA switcher, responsive layout.
-- `anatomy-data.js` — `SYSTEMS` (12), `HISTOLOGY` (16), `STRUCTURES`
-  (~150: id, en, la, es, system, histology, descriptions).
+- `app.js` — wiring: grouped browser (system→subgroup / region / A–Z),
+  global search, keyboard navigation, viewer, detail, quiz, bookmarks,
+  flashcards, theme switcher, EN/ES/FR/LA switcher, responsive layout.
+- `anatomy-data.js` — `SYSTEMS` (12), `REGIONS` (8), `SUBGROUPS` (per
+  system), `HISTOLOGY` (16), `STRUCTURES`
+  (209: id, system, subgroup, region, en, la, es, histology, descriptions).
+  Every id in `part-map.json` has a structure entry (no dead clicks).
 - `viewer3d.js` — Three.js viewer: BodyParts3D 4.0 meshes (CC BY 4.0,
   `models/`, one `.bin.gz` per source system), merged per system,
   invisible per-part pickers, on-demand highlight, labels,
@@ -19,6 +22,8 @@ user-facing spec.
   background or on demand via `ensureScope(ourSystem)`.
 - `quiz.js` — Find-Word / Find-Point engine, scoring, streak.
 - `storage.js` — per-device persistence (localStorage, memory fallback).
+- `themes/` — generated per-theme background textures (SVG), produced by
+  `../tools/make-theme-assets.mjs` (deterministic — re-run to regenerate).
 - `vendor/` — Three.js r160 + addons (MIT), resolved through the
   import map in `../index.html`.
 - `models/` — `atlas.json` + `sys-*.bin.gz` (CC BY 4.0, see

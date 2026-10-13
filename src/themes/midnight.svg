@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 800" preserveAspectRatio="xMidYMid slice">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="0.6" y2="1">
+<stop offset="0%" stop-color="#0a1322"/><stop offset="55%" stop-color="#081020"/><stop offset="100%" stop-color="#050a14"/>
+</linearGradient>
+<pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse">
+<circle cx="1.4" cy="1.4" r="1.1" fill="#27406b" opacity="0.35"/>
+</pattern>
+<filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" stitchTiles="stitch"/>
+<feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.045 0"/></filter>
+</defs>
+<rect width="1280" height="800" fill="url(#bg)"/>
+<rect width="1280" height="800" fill="url(#dots)" opacity="0.5"/><radialGradient id="b251.0647099558264157.59957005269825" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#14b8a6" stop-opacity="0.16"/>
+    <stop offset="100%" stop-color="#14b8a6" stop-opacity="0"/>
+  </radialGradient>
+  <circle cx="251.1" cy="157.6" r="460" fill="url(#b251.0647099558264157.59957005269825)"/><radialGradient id="b1128.6283195344731145.7499528862536" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.16"/>
+    <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0"/>
+  </radialGradient>
+  <circle cx="1128.6" cy="145.7" r="420" fill="url(#b1128.6283195344731145.7499528862536)"/><radialGradient id="b665.8464769367129775.2418358810246" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#6366f1" stop-opacity="0.16"/>
+    <stop offset="100%" stop-color="#6366f1" stop-opacity="0"/>
+  </radialGradient>
+  <circle cx="665.8" cy="775.2" r="560" fill="url(#b665.8464769367129775.2418358810246)"/><radialGradient id="b181.59375892952085721.94345488213" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.16"/>
+    <stop offset="100%" stop-color="#22d3ee" stop-opacity="0"/>
+  </radialGradient>
+  <circle cx="181.6" cy="721.9" r="380" fill="url(#b181.59375892952085721.94345488213)"/><rect width="1280" height="800" filter="url(#grain)" opacity="0.5"/></svg>

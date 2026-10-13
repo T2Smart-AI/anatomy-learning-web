@@ -10,8 +10,11 @@ Free, open-source, interactive 3D anatomy for everybody. No account, no paywall,
 
 - **Real 3D anatomy** — 2,234 meshes from the open BodyParts3D 4.0 dataset, rendered with Three.js
 - **12 body systems** — skeletal, muscular, cardiovascular, nervous, respiratory, digestive, urinary, reproductive, lymphatic, endocrine, integumentary + sectional notes
-- **150+ structures** with names and descriptions in **English, Spanish, French and Latin**
-- **Interactions** — orbit/zoom/pan, click-to-select, labels, isolate system, X-ray bones, muscle/skin transparency, exploded view
+- **209 structures** with names and descriptions in **English, Spanish, French and Latin** — every clickable 3D mesh has a proper entry
+- **Easy browsing** — group by *system → subgroup* (Skull, Vertebrae, Thoracic cage, Upper limb…), by *body region* (Head & neck, Thorax, Abdomen, Limbs…), or flat A–Z; collapsible groups with counts; `3D` / `ref` badges show which entries have a model
+- **Global search** — one search across all systems and all 4 languages, with instant results and keyboard navigation (`/` search · `↑` `↓` browse · `Enter` focus · `Esc` close)
+- **Three polished themes** — Midnight (dark), Pearl (light) and Pop (playful), each with its own generated background texture; remembered per device
+- **Interactions** — orbit/zoom/pan, click-to-select with system-colored highlight, labels, isolate system, X-ray bones, muscle/skin transparency, exploded view
 - **Quizzes** — *Find the word* and *Find the point*, scoring, streaks, mistake review
 - **Flashcards & bookmarks** — saved on your device (localStorage)
 - **Progressive loading** — the body shape appears after ~17 MB; remaining systems stream in the background or load on demand
@@ -20,22 +23,26 @@ Free, open-source, interactive 3D anatomy for everybody. No account, no paywall,
 
 ## Screenshots
 
-*(add `docs/screenshots/*.png` and link them here)*
+| Midnight (dark) | Pearl (light) | Pop (playful) |
+|---|---|---|
+| ![Midnight theme](docs/screenshots/theme-midnight.jpg) | ![Pearl theme](docs/screenshots/theme-pearl.jpg) | ![Pop theme](docs/screenshots/theme-pop.jpg) |
 
 ## Tech stack
 
 Vanilla ES modules · [Three.js](https://threejs.org/) 0.160 (vendored in `src/vendor/`, MIT) · no build step, no backend, no tracker.
 
 ```
-index.html            app shell (import map, SEO meta, styles)
-src/app.js            wiring: search, browser, detail, quiz, bookmarks, i18n
-src/anatomy-data.js   structure database (EN/ES/FR/LA, systems, histology)
+index.html            app shell (import map, SEO meta, 3-theme design system)
+src/app.js            wiring: grouped browser, search, detail, quiz, bookmarks, themes, i18n
+src/anatomy-data.js   structure database (EN/ES/FR/LA, systems, subgroups, regions, histology)
 src/viewer3d.js       3D viewer + progressive per-system loader
 src/quiz.js           quiz engine
 src/storage.js        per-device persistence (localStorage)
+src/themes/           generated per-theme background textures (SVG, from tools/make-theme-assets.mjs)
 src/vendor/           Three.js + addons (pinned 0.160.0)
 src/models/           BodyParts3D 4.0 meshes, one .bin.gz per system (CC BY 4.0)
 tools/                repack-by-system.mjs — rebuilds per-system packs from the raw atlas
+                      make-theme-assets.mjs — regenerate the theme background textures
 legacy/perchance/     original Perchance generator files (archived, not used)
 ```
 

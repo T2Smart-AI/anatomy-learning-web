@@ -6,7 +6,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
-import { getStructure } from "./anatomy-data.js";
+import { getStructure, SYSTEM_OF } from "./anatomy-data.js";
 
 // source-system palette (human-atlas) + material tweaks
 const SRC_SYS = [
@@ -335,11 +335,17 @@ export function createViewer(canvas, opts = {}) {
     }
   }
   // Load one source system now (jumps the queue). Used on demand.
+  // Waits for atlas.json/part-map.json before touching chunk metadata,
+  // so early calls (isolate/quiz/select before boot finishes) are safe.
   function ensureSystem(sys) {
     if (loadedSystems.has(sys)) return Promise.resolve();
     if (loadingSystems.has(sys)) return loadingSystems.get(sys);
-    enqueue(sys, true);
-    return startLoad(sys);
+    return boot_p.then(() => {
+      if (loadedSystems.has(sys)) return;
+      if (loadingSystems.has(sys)) return loadingSystems.get(sys);
+      enqueue(sys, true);
+      return startLoad(sys);
+    }).catch(() => {});
   }
   // Load every source system behind one of our 12 browser systems.
   function ensureScope(our) {
@@ -375,7 +381,8 @@ export function createViewer(canvas, opts = {}) {
     if (loadErrors.length) onError && onError(loadErrors[0] instanceof Error ? loadErrors[0].message : String(loadErrors[0]));
     else if (firstError) onError && onError(firstError instanceof Error ? firstError.message : String(firstError));
   }
-  load().catch((e) => { onError && onError(e instanceof Error ? e.message : String(e)); });
+  let boot_p = Promise.resolve();
+  boot_p = load().catch((e) => { onError && onError(e instanceof Error ? e.message : String(e)); });
 
   // ── API ──
   function buildHighlight() {
@@ -393,6 +400,10 @@ export function createViewer(canvas, opts = {}) {
         const src = sysOfPart[parts[0]];
         if (src) highlight.position.copy(sysOffset.get(src) || new THREE.Vector3());
         const st = getStructure(selected);
+        if (st && SYSTEM_OF[st.s]) { // tint the highlight with the structure's system color
+          const c = new THREE.Color(SYSTEM_OF[st.s].color);
+          hlMat.color.copy(c); hlMat.emissive.copy(c).multiplyScalar(0.4);
+        } else { hlMat.color.set(0x2dd4bf); hlMat.emissive.set(0x0d5a52); }
         highlight.visible = !isolatedOur || (st && st.s === isolatedOur);
         highlight.renderOrder = 5;
         scene.add(highlight);

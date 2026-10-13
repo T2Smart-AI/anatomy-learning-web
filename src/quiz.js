@@ -20,7 +20,10 @@ export function createQuiz(opts) {
     } catch {}
   }
   function pool() {
-    const QUIZABLE = new Set(("sk_frontal sk_mandible sk_maxilla sk_hyoid sk_cervical sk_thoracic sk_lumbar sk_sacrum sk_sternum sk_ribs sk_clavicle sk_scapula sk_humerus sk_radius sk_ulna sk_carpals sk_coxae sk_femur sk_patella sk_tibia sk_fibula sk_tarsals cv_heart cv_aorticarch cv_carotid cv_ivc nv_brain nv_spinalcord nv_sciatic re_trachea re_lungs dg_esophagus dg_stomach dg_liver dg_colon ur_kidney ur_bladder en_thyroid").split(" "));
+    const QUIZABLE = new Set(("sk_frontal sk_mandible sk_maxilla sk_hyoid sk_cervical sk_thoracic sk_lumbar sk_sacrum sk_sternum sk_ribs sk_clavicle sk_scapula sk_humerus sk_radius sk_ulna sk_carpals sk_metacarpals sk_coxae sk_femur sk_patella sk_tibia sk_fibula sk_tarsals sk_metatarsals " +
+      "cv_heart cv_aorticarch cv_carotid cv_carotid_int cv_ivc cv_portal cv_renal_a cv_mitral cv_aortic_valve cv_radial_a cv_cephalic cv_basilic " +
+      "nv_brain nv_frontal_lobe nv_temporal_lobe nv_occipital_lobe nv_thalamus nv_hippocampus nv_corpus_callosum nv_optic nv_spinalcord nv_sciatic " +
+      "re_trachea re_lungs re_larynx re_larynx_cart re_epiglottis re_cricoid dg_esophagus dg_stomach dg_liver dg_colon ur_kidney ur_bladder en_thyroid mu_sartorius mu_soleus mu_psoas mu_gracilis mu_serratus mu_mylohyoid ly_spleen").split(" "));
     const ids = meshIds().filter(id => getStructure(id) && QUIZABLE.has(id));
     const scoped = Q.scope === "all" ? ids : ids.filter(id => getStructure(id).s === Q.scope);
     if (scoped.length >= 4) return [...new Set(scoped)];
