@@ -117,8 +117,24 @@
   #sysTabs .tab.on .cnt { color:var(--text); }
 
   /* ── layout ── */
-  #layout { display:grid; grid-template-columns:312px 1fr 312px; gap:10px; padding:10px 12px 20px;
+  /* columns: browser | splitter | viewer | splitter | detail — user-resizable via --bw/--dw */
+  #layout { display:grid; grid-template-columns:var(--bw, 272px) 10px 1fr 10px var(--dw, 296px); gap:10px; padding:10px 12px 20px;
     height:calc(100vh - 145px); min-height:560px; }
+  #layout.dragging { user-select:none; -webkit-user-select:none; }
+  /* focus mode: hide side panels, viewer takes the whole row */
+  #layout.focus { grid-template-columns:1fr !important; }
+  #layout.focus #browserPane, #layout.focus #detailPane, #layout.focus .split { display:none; }
+  /* splitter handles */
+  .split { position:relative; touch-action:none; cursor:col-resize; }
+  .split::before { content:""; position:absolute; left:50%; top:16px; bottom:16px; width:3px; transform:translateX(-50%);
+    border-radius:3px; background:transparent; transition:background .15s ease, width .15s ease; }
+  .split:hover::before { background:var(--stroke-strong); }
+  .split.dragging::before, .split:focus-visible::before { background:var(--accent); width:5px; }
+  #splitH { position:relative; flex:none; height:12px; touch-action:none; cursor:row-resize; }
+  #splitH::before { content:""; position:absolute; left:50%; top:4px; width:56px; height:3px; transform:translateX(-50%);
+    border-radius:3px; background:var(--stroke-strong); transition:background .15s ease, width .15s ease; }
+  #splitH:hover::before, #splitH.dragging::before { background:var(--accent); width:84px; }
+  #layout.dragging .split::before, #splitH.dragging::before { background:var(--accent); }
   #browserPane, #detailPane, #viewToolbar, #quizBar { background:var(--panel); border:1px solid var(--stroke);
     border-radius:var(--radius-lg); backdrop-filter:blur(14px) saturate(1.3); -webkit-backdrop-filter:blur(14px) saturate(1.3);
     box-shadow:var(--shadow); }
@@ -173,9 +189,15 @@
   #viewToolbar .soft, #viewToolbar .explode { display:flex; gap:6px; align-items:center; }
   input[type="range"] { accent-color:var(--accent); }
   input[type="checkbox"] { accent-color:var(--accent); }
+  /* the canvas fills whatever height the column has; dragging #splitH pins it (--ch) */
   #canvasHolder { position:relative; border:1px solid var(--stroke); border-radius:var(--radius-lg); overflow:hidden;
-    height:52vh; min-height:380px; background:var(--panel); backdrop-filter:blur(6px); }
+    flex:1 1 auto; min-height:320px; background:var(--panel); backdrop-filter:blur(6px); }
+  #canvasHolder.sized { flex:0 0 var(--ch, 420px); }
   #viewCanvas { width:100%; height:100%; display:block; touch-action:none; }
+  #maxBtn { position:absolute; top:10px; right:10px; z-index:4; width:36px; height:36px; padding:0; font-size:17px;
+    border-radius:11px; background:var(--panel); backdrop-filter:blur(10px); border:1px solid var(--stroke-strong);
+    display:grid; place-items:center; opacity:.75; }
+  #maxBtn:hover { opacity:1; }
   #toast { position:absolute; left:50%; bottom:12px; transform:translateX(-50%);
     background:var(--grad); color:var(--accent-ink); font-weight:600; padding:8px 16px; border-radius:22px;
     font-size:13px; z-index:3; box-shadow:var(--shadow); animation:toastIn .2s ease; }
@@ -194,6 +216,13 @@
 
   /* ── quiz ── */
   #quizBar { padding:11px 12px; }
+  /* idle: one compact row so the canvas keeps the space */
+  #quizBar.idle { display:flex; align-items:center; gap:8px; padding:8px 12px; flex-wrap:nowrap; }
+  #quizBar.idle #quizPrompt { display:none; }
+  #quizBar.idle .quizBtns { order:1; flex-wrap:nowrap; }
+  #quizBar.idle .quizBtns button { white-space:nowrap; padding:7px 10px; font-size:13px; }
+  #quizBar.idle #quizMeta { order:2; margin:0 0 0 auto; white-space:nowrap; font-size:11px; gap:8px; }
+  #quizBar.idle #quizRound { display:none; }
   #quizMeta { display:flex; justify-content:space-between; font-size:12px; color:var(--muted); margin-bottom:4px; }
   #quizPrompt { font-size:15px; margin:2px 0 9px; }
   #quizPrompt small { color:var(--muted); }
@@ -244,7 +273,7 @@
 
   @media (max-width:1080px) {
     #layout { grid-template-columns:1fr 1fr; } #detailPane { grid-column:1 / -1; }
-    #canvasHolder { height:46vh; }
+    #splitL, #splitR { display:none; } #canvasHolder { height:50vh; }
   }
   @media (max-width:700px) {
     #layout { grid-template-columns:1fr; height:auto; } .hideS { display:none; }
@@ -291,6 +320,8 @@
     <div id="resultCount" class="muted">…</div>
     <div id="browserList" role="list"></div>
   </aside>
+  <div id="splitL" class="split" role="separator" aria-orientation="vertical" tabindex="0"
+       title="Drag to resize the browser · double-click to reset"></div>
   <section id="viewWrap" aria-label="3D viewer">
     <div id="viewToolbar">
       <label><input type="checkbox" id="labelsChk" checked> Labels</label>
@@ -306,6 +337,7 @@
     </div>
     <div id="canvasHolder">
       <canvas id="viewCanvas" role="img" aria-label="Interactive 3D human body model. Use the structure list to explore anatomy without the 3D view."></canvas>
+      <button id="maxBtn" title="Maximize viewer — Esc exits">⛶</button>
       <div id="toast" hidden></div>
       <div id="loadOverlay"><div class="loadBox"><h3>Loading human anatomy…</h3>
         <div class="loadTrack"><div id="loadBar"></div></div>
@@ -314,6 +346,8 @@
         <div id="loadErr" hidden></div><button id="loadRetry" hidden>Retry</button>
       </div></div>
     </div>
+    <div id="splitH" role="separator" aria-orientation="horizontal" tabindex="0"
+         title="Drag up/down to resize the 3D view · double-click to maximize"></div>
     <div id="quizBar">
       <div id="quizMeta"><span id="quizRound">Quiz ready</span><span id="quizScore">Score 0</span></div>
       <div id="quizPrompt">Test yourself on the 3D body — 10 questions per round.</div>
@@ -325,6 +359,8 @@
       </div>
     </div>
   </section>
+  <div id="splitR" class="split" role="separator" aria-orientation="vertical" tabindex="0"
+       title="Drag to resize the details panel · double-click to reset"></div>
   <aside id="detailPane" aria-label="Structure details">
     <div id="detailBody" hidden>
       <div class="dTitleRow"><span id="dDot" class="dot"></span><h2 id="dEn">—</h2></div>
@@ -340,8 +376,9 @@
       </div>
     </div>
     <div class="hint">Drag to orbit · scroll to zoom · click any bone, muscle or organ.
+      Resize the viewer: drag the <kbd>⋮</kbd> edges or the grip under the canvas · <kbd>⛶</kbd> or double-click the grip maximizes it · <kbd>Esc</kbd> restores.
       Shortcuts: <kbd>/</kbd> search · <kbd>↑</kbd><kbd>↓</kbd> browse · <kbd>Enter</kbd> focus · <kbd>Esc</kbd> close.
-      Bookmarks, scores and theme are saved on this device. Models: BodyParts3D 4.0 (CC BY 4.0) — educational, not clinical.</div>
+      Bookmarks, scores and layout are saved on this device. Models: BodyParts3D 4.0 (CC BY 4.0) — educational, not clinical.</div>
   </aside>
 </main>
 <div id="bmModal" class="modal" hidden><div class="sheet"><div class="sheetHead"><h3>★ Bookmarks</h3><button data-close>✕</button></div><div id="bmList"></div></div></div>

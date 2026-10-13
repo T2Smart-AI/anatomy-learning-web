@@ -6,7 +6,8 @@ user-facing spec.
 ## Layout
 
 - `app.js` — wiring: grouped browser (system→subgroup / region / A–Z),
-  global search, keyboard navigation, viewer, detail, quiz, bookmarks,
+  global search, keyboard navigation, resizable layout (splitter drags +
+  focus/maximize mode, sizes persisted), viewer, detail, quiz, bookmarks,
   flashcards, theme switcher, EN/ES/FR/LA switcher, responsive layout.
 - `anatomy-data.js` — `SYSTEMS` (12), `REGIONS` (8), `SUBGROUPS` (per
   system), `HISTOLOGY` (16), `STRUCTURES`

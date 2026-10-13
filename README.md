@@ -14,6 +14,7 @@ Free, open-source, interactive 3D anatomy for everybody. No account, no paywall,
 - **Easy browsing** — group by *system → subgroup* (Skull, Vertebrae, Thoracic cage, Upper limb…), by *body region* (Head & neck, Thorax, Abdomen, Limbs…), or flat A–Z; collapsible groups with counts; `3D` / `ref` badges show which entries have a model
 - **Global search** — one search across all systems and all 4 languages, with instant results and keyboard navigation (`/` search · `↑` `↓` browse · `Enter` focus · `Esc` close)
 - **Three polished themes** — Midnight (dark), Pearl (light) and Pop (playful), each with its own generated background texture; remembered per device
+- **Resizable, maximizable viewer** — the 3D canvas fills its column by default; drag the edge handles or the grip under the canvas to resize, and hit **⛶** (or double-click the grip) for a huge focus view with the side panels hidden — `Esc` restores. Your layout is remembered per device
 - **Interactions** — orbit/zoom/pan, click-to-select with system-colored highlight, labels, isolate system, X-ray bones, muscle/skin transparency, exploded view
 - **Quizzes** — *Find the word* and *Find the point*, scoring, streaks, mistake review
 - **Flashcards & bookmarks** — saved on your device (localStorage)

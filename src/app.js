@@ -9,6 +9,7 @@ const kvSafe = storage;
 const state = {
   sys: "all", view: "systems", lang: "en", selected: null,
   bookmarks: [], collapsed: new Set(), theme: "midnight", navIdx: -1,
+  sizes: { bw: 272, dw: 296, ch: 0 }, focus: false, // ch = 0 → auto-fill
 };
 const nameOf = (st) => state.lang === "la" ? st.la : state.lang === "es" ? st.es : state.lang === "fr" ? (st.fr || st.en) : st.en;
 const descOf = (st) => state.lang === "es" ? st.de : state.lang === "fr" ? (st.df || st.d) : st.d;
@@ -40,6 +41,67 @@ async function applyTheme(id, save = true) {
   $("themeName").textContent = THEMES[id].name;
   document.querySelectorAll("#themeMenu button").forEach(b => b.classList.toggle("on", b.dataset.themeId === id));
   if (save) await kvSafe.set("theme", id);
+}
+
+// ── resizable layout (splitter drags + focus mode) ──
+const LAYOUT_MIN = { bw: 210, dw: 210, ch: 220 };
+const LAYOUT_MAX = { bw: 540, dw: 540 };
+function applyLayout() {
+  const l = $("layout");
+  l.style.setProperty("--bw", state.sizes.bw + "px");
+  l.style.setProperty("--dw", state.sizes.dw + "px");
+  l.style.setProperty("--ch", state.sizes.ch + "px");
+  $("canvasHolder").classList.toggle("sized", state.sizes.ch > 0);
+}
+function saveLayout() { kvSafe.set("layout", state.sizes); }
+function setFocus(on) {
+  state.focus = on;
+  $("layout").classList.toggle("focus", on);
+  const b = $("maxBtn");
+  b.textContent = on ? "⤡" : "⛶";
+  b.title = on ? "Restore side panels (Esc)" : "Maximize viewer (Esc exits)";
+  if (quiz) renderQuiz(quiz.Q, false);
+  toast(on ? "Focus mode — side panels hidden · Esc to exit" : "Panels restored");
+}
+function initSplitting() {
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const drag = (handle, onMove) => {
+    handle.addEventListener("pointerdown", (e) => {
+      if (e.button != null && e.button !== 0) return;
+      e.preventDefault();
+      try { handle.setPointerCapture(e.pointerId); } catch {}
+      handle.classList.add("dragging");
+      $("layout").classList.add("dragging");
+      const move = (ev) => onMove(ev);
+      const up = () => {
+        handle.classList.remove("dragging");
+        $("layout").classList.remove("dragging");
+        handle.removeEventListener("pointermove", move);
+        handle.removeEventListener("pointerup", up);
+        handle.removeEventListener("pointercancel", up);
+        saveLayout();
+      };
+      handle.addEventListener("pointermove", move);
+      handle.addEventListener("pointerup", up);
+      handle.addEventListener("pointercancel", up);
+    });
+  };
+  const L = () => $("layout").getBoundingClientRect();
+  drag($("splitL"), (e) => { state.sizes.bw = Math.round(clamp(e.clientX - L().left - 12, LAYOUT_MIN.bw, LAYOUT_MAX.bw)); applyLayout(); });
+  drag($("splitR"), (e) => { state.sizes.dw = Math.round(clamp(L().right - e.clientX - 12, LAYOUT_MIN.dw, LAYOUT_MAX.dw)); applyLayout(); });
+  drag($("splitH"), (e) => {
+    const hr = $("canvasHolder").getBoundingClientRect();
+    const quizMin = 46;
+    const col = $("viewWrap").getBoundingClientRect();
+    const max = col.bottom - hr.top - quizMin - 20; // leave room for the quiz bar + grip
+    state.sizes.ch = Math.round(clamp(e.clientY - hr.top, LAYOUT_MIN.ch, Math.max(LAYOUT_MIN.ch + 40, max)));
+    applyLayout();
+  });
+  // double-click: sides reset to default, grip toggles focus mode
+  $("splitL").addEventListener("dblclick", () => { state.sizes.bw = 272; applyLayout(); saveLayout(); });
+  $("splitR").addEventListener("dblclick", () => { state.sizes.dw = 296; applyLayout(); saveLayout(); });
+  $("splitH").addEventListener("dblclick", () => setFocus(!state.focus));
+  $("maxBtn").onclick = () => setFocus(!state.focus);
 }
 
 // ── system tabs ──
@@ -210,6 +272,9 @@ function renderQuiz(q, done) {
   $("quizScore").textContent = "Score " + q.score + (q.best ? " · Best " + q.best : "");
   $("quizRound").textContent = q.active || done ? `Round ${Math.min(q.round, q.total)}/${q.total}` : "Quiz ready";
   $("stopQuizBtn").hidden = !q.active;
+  // compact single-row quiz when idle (keeps canvas space); hidden entirely in focus mode
+  $("quizBar").classList.toggle("idle", !q.active && !done);
+  $("quizBar").hidden = state.focus && !q.active && !done;
   const ch = $("quizChoices"); ch.innerHTML = "";
   if (done) { showResults(q); $("quizPrompt").textContent = "Quiz finished — review below or start a new one."; return; }
   if (!q.active) { $("quizPrompt").textContent = "Test yourself on the 3D body — 10 questions per round."; return; }
@@ -291,6 +356,9 @@ async function boot() {
   state.theme = (await kvSafe.get("theme")) || "midnight";
   await applyTheme(state.theme, false);
   state.bookmarks = (await kvSafe.get("bookmarks")) || [];
+  Object.assign(state.sizes, (await kvSafe.get("layout")) || {});
+  applyLayout();
+  initSplitting();
   renderTabs(); renderList("");
   const canvas = $("viewCanvas");
   const setLoad = (pct, p) => { $("loadBar").style.width = pct + "%"; $("loadPct").textContent = p && p.totalMB ? p.pct + "% of " + p.totalMB + " MB" + (p.current ? " (" + p.current + ")" : "") : pct + "% · loading anatomy"; };
@@ -323,7 +391,7 @@ async function boot() {
   });
   $("loadRetry").onclick = () => location.reload();
   quiz = createQuiz({ viewer, meshIds: () => viewer.meshIds(), kv: kvSafe, onEvent: renderQuiz });
-  window.__anat = { viewer, quiz, state, select, renderList };
+  window.__anat = { viewer, quiz, state, select, renderList, setFocus, applyLayout };
   select(state.selected || "cv_heart", false);
   renderQuiz(quiz.Q, false);
 
@@ -399,6 +467,7 @@ async function boot() {
     if (e.key === "/" && !typing(e)) { e.preventDefault(); $("searchInput").focus(); return; }
     if (e.key === "Escape") {
       if (anyModalOpen()) { document.querySelectorAll(".modal").forEach(hide); return; }
+      if (state.focus) { setFocus(false); return; }
       if (typing(e) && e.target.id === "searchInput") { e.target.value = ""; renderList(""); e.target.blur(); }
       return;
     }

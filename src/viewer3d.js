@@ -447,6 +447,9 @@ export function createViewer(canvas, opts = {}) {
     camera.aspect = w / h; camera.updateProjectionMatrix();
   }
   addEventListener("resize", resize); resize();
+  // The layout is user-resizable (splitter drags, focus mode), so watch the
+  // canvas itself — window resize events alone no longer cover size changes.
+  if (typeof ResizeObserver !== "undefined") new ResizeObserver(resize).observe(canvas);
   (function loop() {
     requestAnimationFrame(loop);
     healCamera(); controls.update(); renderer.render(scene, camera);
