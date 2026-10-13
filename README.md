@@ -2,7 +2,7 @@
 
 Free, open-source, interactive 3D anatomy for everybody. No account, no paywall, no ads — just a browser.
 
-**→ Live demo:** [https://&lt;your-username&gt;.github.io/anatomy-learning-web/](https://your-username.github.io/anatomy-learning-web/) *(replace with your GitHub Pages URL)*
+**→ Live demo:** [https://t2smart-ai.github.io/anatomy-learning-web/](https://t2smart-ai.github.io/anatomy-learning-web/)
 
 ![status](https://img.shields.io/badge/status-alpha-orange) ![license](https://img.shields.io/badge/license-MIT-blue) ![models](https://img.shields.io/badge/models-CC%20BY%204.0-green)
 
