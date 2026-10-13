@@ -1,0 +1,14 @@
+// Anatomy Learning — Perchance config (lists stay tiny; content lives in src/).
+kv = {import:kv-plugin}
+anatomy = {import:kv-plugin}
+
+$meta
+  title = Anatomy Learning — 3D Human Body Explorer
+  description = Interactive 3D anatomy: 150+ structures in EN/ES/Latin, quizzes, flashcards and bookmarks. All unlocked.
+  tags = anatomy, 3d, education, medical, quiz, flashcards, biology
+
+appTitle
+  Anatomy Learning
+
+output
+  [appTitle]

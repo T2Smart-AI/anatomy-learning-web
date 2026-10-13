@@ -1,0 +1,6 @@
+# ignore local dev stuff
+.DS_Store
+Thumbs.db
+*.log
+node_modules/
+.scratch/

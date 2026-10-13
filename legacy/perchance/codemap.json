@@ -1,0 +1,1597 @@
+{
+  "$schema": "perchance-code-extractor/codemap@1",
+  "generatedAt": "2026-10-13T10:48:10.120Z",
+  "generatedBy": {
+    "tool": "Perchance Code Extractor",
+    "generator": "project-extractor",
+    "description": "Turns a Perchance generator back into its original, un-minified source files (main.pjs, index.html, src/**, imported generators) and can rebuild it as a readable single-file .html or a Node.js/Express project."
+  },
+  "generator": {
+    "name": "hum-anan-atomy",
+    "pageUrl": "https://perchance.org/hum-anan-atomy",
+    "singleFileDownload": "https://perchance.org/api/downloadGenerator?generatorName=hum-anan-atomy&format=html"
+  },
+  "summary": {
+    "title": "Anatomy Learning — 3D Human Body Explorer",
+    "description": "Interactive 3D anatomy: 150+ structures in EN/ES/Latin, quizzes, flashcards and bookmarks. All unlocked.",
+    "tags": [
+      "anatomy",
+      "3d",
+      "education",
+      "medical",
+      "quiz",
+      "flashcards",
+      "biology"
+    ],
+    "fileCount": 27,
+    "totalBytes": 35433245,
+    "features": [
+      "Persistent key/value storage (kv-plugin)",
+      "3D rendering (three.js)",
+      "WebGL graphics",
+      "Canvas rendering",
+      "Browser storage (localStorage)",
+      "Animation loop"
+    ]
+  },
+  "app": {
+    "whatItDoes": "Interactive 3D anatomy: 150+ structures in EN/ES/Latin, quizzes, flashcards and bookmarks. All unlocked.",
+    "howItWorks": [
+      "This is a Perchance generator. The platform evaluates main.pjs (its lists and functions) and renders the index.html template inside an isolated per-generator iframe.",
+      "main.pjs defines 2 random lists (appTitle, output) and 0 functions; these drive generated content.",
+      "It uses Perchance templating: 1 square-bracket expression(s), 0 {a|b} alternation(s) and 0 weighted item(s).",
+      "index.html provides the UI: 1 script block(s), 1 style block(s), 25 button(s), 6 input(s) and 65 element id(s).",
+      "4 JavaScript module(s) live under src/ and are loaded relatively by index.html; 2 look like pure logic and 2 touch the DOM or other browser APIs.",
+      "It imports 1 Perchance generator(s)/plugin(s); their source is bundled under imports/.",
+      "15 binary asset(s) (images/audio/models) are included verbatim.",
+      "Detected capabilities: Persistent key/value storage (kv-plugin); 3D rendering (three.js); WebGL graphics; Canvas rendering; Browser storage (localStorage); Animation loop."
+    ],
+    "entrypoints": {
+      "markup": "index.html",
+      "generatorLogic": "main.pjs"
+    },
+    "features": [
+      "Persistent key/value storage (kv-plugin)",
+      "3D rendering (three.js)",
+      "WebGL graphics",
+      "Canvas rendering",
+      "Browser storage (localStorage)",
+      "Animation loop"
+    ],
+    "ui": {
+      "title": "",
+      "headings": [
+        {
+          "level": 1,
+          "text": "Anatomy Learning"
+        },
+        {
+          "level": 3,
+          "text": "Loading human anatomy…"
+        },
+        {
+          "level": 2,
+          "text": "—"
+        },
+        {
+          "level": 3,
+          "text": "★ Bookmarks"
+        },
+        {
+          "level": 3,
+          "text": "▤ Flashcards"
+        },
+        {
+          "level": 3,
+          "text": "Quiz results"
+        }
+      ],
+      "buttons": 25,
+      "inputs": 6,
+      "canvases": 1,
+      "elementIds": [
+        "topBar",
+        "langSeg",
+        "bookmarksBtn",
+        "flashBtn",
+        "weakBtn",
+        "sysTabs",
+        "layout",
+        "browserPane",
+        "searchInput",
+        "resultCount",
+        "browserList",
+        "viewWrap",
+        "viewToolbar",
+        "labelsChk",
+        "xrayChk",
+        "softRange",
+        "rotateChk",
+        "explodeRange",
+        "isolateBtn",
+        "showAllBtn",
+        "resetBtn",
+        "canvasHolder",
+        "viewCanvas",
+        "toast",
+        "loadOverlay",
+        "loadBar",
+        "loadPct",
+        "loadErr",
+        "loadRetry",
+        "quizBar",
+        "quizMeta",
+        "quizRound",
+        "quizScore",
+        "quizPrompt",
+        "quizChoices",
+        "startWordBtn",
+        "startPointBtn",
+        "stopQuizBtn",
+        "detailPane",
+        "dEn",
+        "dLa",
+        "dEs",
+        "dFr",
+        "dSys",
+        "dHist",
+        "dDesc",
+        "dId",
+        "bookmarkBtn",
+        "focusBtn",
+        "quizThisBtn",
+        "bmModal",
+        "bmList",
+        "fcModal",
+        "fcCount",
+        "fcCard",
+        "fcFront",
+        "fcBack",
+        "fcFlip",
+        "fcNext",
+        "fcKnown",
+        "fcShuffle",
+        "resultsModal",
+        "resSummary",
+        "resReview",
+        "resClose"
+      ]
+    },
+    "externalResources": [
+      "perchance.org"
+    ],
+    "dataFiles": [
+      {
+        "path": "src/models/atlas.json",
+        "json": {
+          "valid": true,
+          "type": "object",
+          "depth": 5,
+          "nodes": 50000,
+          "keys": [
+            "version",
+            "parts",
+            "chunks",
+            "triangles",
+            "concepts",
+            "sourceTriangles",
+            "optimized",
+            "sex",
+            "source",
+            "scope"
+          ],
+          "keyCount": 10
+        }
+      },
+      {
+        "path": "src/part-map.json",
+        "json": {
+          "valid": true,
+          "type": "object",
+          "depth": 2,
+          "nodes": 1227,
+          "keys": [
+            "sk_frontal",
+            "sk_parietal",
+            "sk_occipital",
+            "sk_temporal",
+            "sk_sphenoid",
+            "sk_ethmoid",
+            "sk_maxilla",
+            "sk_mandible",
+            "sk_zygomatic",
+            "sk_nasal",
+            "sk_hyoid",
+            "sk_cervical",
+            "sk_thoracic",
+            "sk_lumbar",
+            "sk_sacrum",
+            "sk_coccyx",
+            "sk_sternum",
+            "sk_ribs",
+            "sk_clavicle",
+            "sk_scapula",
+            "sk_humerus",
+            "sk_radius",
+            "sk_ulna",
+            "sk_carpals",
+            "sk_metacarpals",
+            "sk_phalanges_hand",
+            "sk_coxae",
+            "sk_femur",
+            "sk_patella",
+            "sk_tibia",
+            "sk_fibula",
+            "sk_tarsals",
+            "sk_metatarsals",
+            "sk_nasolacrimal",
+            "mu_scm",
+            "mu_trapezius",
+            "mu_deltoid",
+            "mu_pectoralis",
+            "mu_biceps",
+            "mu_triceps",
+            "mu_coracobrachialis",
+            "mu_teresmajor",
+            "mu_transvthoracis",
+            "mu_semispinalis",
+            "mu_levator",
+            "mu_transvperinei",
+            "mu_gluteusmax",
+            "mu_quadriceps",
+            "mu_hamstrings",
+            "mu_iliotibial"
+          ],
+          "keyCount": 139
+        }
+      }
+    ]
+  },
+  "extraction": {
+    "method": "downloadGenerator-api",
+    "input": "https://perchance.org/hum-anan-atomy#edit",
+    "fileName": null,
+    "sourceGenerator": "hum-anan-atomy",
+    "pipeline": [
+      "The input (a perchance.org/generator-name URL, a single-file download URL, a pasted single-file download, or a local .html file) is resolved to a Perchance generator name.",
+      "GET https://perchance.org/api/downloadGenerator?generatorName=<name>&format=html (fetched through the super-fetch proxy to avoid CORS) returns a standalone HTML page.",
+      "That page carries two non-JS data blocks: <script id=\"preloaded-generator-data\"> (the generator's lists, its HTML template, and a manifest of src/ files) and <script id=\"imported-generators\"> (the source of every imported generator/plugin).",
+      "Each block is decoded by trying JSON.parse on the raw text first, then decodeURI + JSON.parse for older URI-encoded exports (some exports ship readable JSON, others percent-encoded).",
+      "main.pjs = preloaded.modelText and index.html = preloaded.outputTemplate, saved verbatim.",
+      "Every entry in preloaded.srcManifest is downloaded from https://user.uploads.dev/file/<key>; text files are decoded, then JSON and embedded-JS data files are pretty-printed for readability; binary files are kept byte-for-byte.",
+      "Imported generators from the #imported-generators block are written to imports/<name>/main.pjs (and index.html when present).",
+      "The HTML/CSS/JS/JSON tabs are a convenience view produced by splitting index.html (styles and scripts pulled out for readability); the Project Files section holds the true, un-split files.",
+      "This codemap.json is derived from the resulting file set: no extra network requests, no heuristics beyond the regex/structural analysis documented in its own fields."
+    ],
+    "counts": {
+      "files": 27,
+      "totalBytes": 35433245,
+      "srcFiles": 24,
+      "importedGenerators": 1,
+      "binaryFiles": 15,
+      "emptyFiles": 0,
+      "prettyPrinted": 2
+    },
+    "transformations": [
+      {
+        "path": "src/models/atlas.json",
+        "change": "Reformatted the JSON source with 2-space indentation for readability (values unchanged)."
+      },
+      {
+        "path": "src/part-map.json",
+        "change": "Reformatted the JSON source with 2-space indentation for readability (values unchanged)."
+      }
+    ],
+    "sourceManifest": [
+      {
+        "path": "src/quiz.js",
+        "hostedAt": "https://user.uploads.dev/file/13b5324a12ea8e2ce62a9ebd7221fede.js",
+        "downloaded": true
+      },
+      {
+        "path": "src/README.md",
+        "hostedAt": "https://user.uploads.dev/file/eecd65e501e6af2f94747cb4851f4068.txt",
+        "downloaded": true
+      },
+      {
+        "path": "src/SPEC.md",
+        "hostedAt": "https://user.uploads.dev/file/2d37b69454e7b4acb747582b41d8c643.txt",
+        "downloaded": true
+      },
+      {
+        "path": "src/anatomy-data.js",
+        "hostedAt": "https://user.uploads.dev/file/79763ce4c978a43cd668a6e51df6dd54.js",
+        "downloaded": true
+      },
+      {
+        "path": "src/viewer3d.js",
+        "hostedAt": "https://user.uploads.dev/file/0ace1c216c1e1073b6ce99f5a2490061.js",
+        "downloaded": true
+      },
+      {
+        "path": "src/app.js",
+        "hostedAt": "https://user.uploads.dev/file/c76bdd6bd81b4989bf692b44f82c9505.js",
+        "downloaded": true
+      },
+      {
+        "path": "src/models/body-0.bin.gz",
+        "hostedAt": "https://user.uploads.dev/file/bd53ae5f0c8d0120556c1e3740d79c52.gz",
+        "downloaded": true
+      },
+      {
+        "path": "src/models/body-1.bin.gz",
+        "hostedAt": "https://user.uploads.dev/file/cdb55d9042881f047ee43a71b7b64204.gz",
+        "downloaded": true
+      },
+      {
+        "path": "src/models/body-2.bin.gz",
+        "hostedAt": "https://user.uploads.dev/file/136ac553e048abe46bee05710abfc4da.gz",
+        "downloaded": true
+      },
+      {
+        "path": "src/models/body-3.bin.gz",
+        "hostedAt": "https://user.uploads.dev/file/bf626fdeba39fd449ec906e36b1d8ed5.gz",
+        "downloaded": true
+      },
+      {
+        "path": "src/models/body-4.bin.gz",
+        "hostedAt": "https://user.uploads.dev/file/057d7f047eb17f0c9fc4b26852593462.gz",
+        "downloaded": true
+      },
+      {
+        "path": "src/models/body-5.bin.gz",
+        "hostedAt": "https://user.uploads.dev/file/aa240cc5ba331d40db1003265b3ec3b5.gz",
+        "downloaded": true
+      },
+      {
+        "path": "src/models/body-6.bin.gz",
+        "hostedAt": "https://user.uploads.dev/file/597247315ce9cf2478b2c692cf31483f.gz",
+        "downloaded": true
+      },
+      {
+        "path": "src/models/body-7.bin.gz",
+        "hostedAt": "https://user.uploads.dev/file/c1ae824ec0cedc157ca75685e79ee33e.gz",
+        "downloaded": true
+      },
+      {
+        "path": "src/models/body-8.bin.gz",
+        "hostedAt": "https://user.uploads.dev/file/be42dfb459072de27e591f97fc8a5dd6.gz",
+        "downloaded": true
+      },
+      {
+        "path": "src/models/body-9.bin.gz",
+        "hostedAt": "https://user.uploads.dev/file/b9cea84ed8ecce0477e596298a823043.gz",
+        "downloaded": true
+      },
+      {
+        "path": "src/models/body-10.bin.gz",
+        "hostedAt": "https://user.uploads.dev/file/6a1369b142cf116f7a483c5119f30707.gz",
+        "downloaded": true
+      },
+      {
+        "path": "src/models/body-11.bin.gz",
+        "hostedAt": "https://user.uploads.dev/file/2efd9a2af167c9bf85d9d98cb739a237.gz",
+        "downloaded": true
+      },
+      {
+        "path": "src/models/body-12.bin.gz",
+        "hostedAt": "https://user.uploads.dev/file/660a267ba5b9939408618d2ae4336bec.gz",
+        "downloaded": true
+      },
+      {
+        "path": "src/models/body-13.bin.gz",
+        "hostedAt": "https://user.uploads.dev/file/2075ad5ac41b0d9b3a90322772449874.gz",
+        "downloaded": true
+      },
+      {
+        "path": "src/models/body-14.bin.gz",
+        "hostedAt": "https://user.uploads.dev/file/a2960427c22b0ed91aa0b3faa55782a0.gz",
+        "downloaded": true
+      },
+      {
+        "path": "src/models/ATTRIBUTION.md",
+        "hostedAt": "https://user.uploads.dev/file/07a5e30ee26b85a921c85369021ded2e.txt",
+        "downloaded": true
+      },
+      {
+        "path": "src/models/atlas.json",
+        "hostedAt": "https://user.uploads.dev/file/7379844f19e4fa97a5883a68e894f92a.json",
+        "downloaded": true
+      },
+      {
+        "path": "src/part-map.json",
+        "hostedAt": "https://user.uploads.dev/file/409451884541efc7bed2b5dd8c0f5f8e.json",
+        "downloaded": true
+      }
+    ],
+    "importedGenerators": [
+      {
+        "name": "kv-plugin",
+        "importLine": "{import:kv-plugin}",
+        "modelBytes": 4177,
+        "hasOutputTemplate": false
+      }
+    ],
+    "caveats": [
+      "Files under src/ are only present because the generator's export manifest listed them; anything the generator loads from outside src/ (other CDNs, uploaded blobs) is referenced by URL but not bundled here.",
+      "3 reference(s) point at project-relative files that are NOT in this extraction (listed in referenceGraph with resolved=false): src/viewer3d.js -> src/models/atlas.json; src/viewer3d.js -> src/part-map.json; src/viewer3d.js -> src/models/body-.",
+      "These files were reformatted for readability (semantics unchanged): src/models/atlas.json, src/part-map.json.",
+      "Binary assets are stored in the zip as-is; their `hostedAt` URL (user.uploads.dev) is the original location."
+    ]
+  },
+  "structure": {
+    "tree": {
+      "main.pjs": null,
+      "index.html": null,
+      "src": {
+        "quiz.js": null,
+        "README.md": null,
+        "SPEC.md": null,
+        "anatomy-data.js": null,
+        "viewer3d.js": null,
+        "app.js": null,
+        "models": {
+          "body-0.bin.gz": null,
+          "body-1.bin.gz": null,
+          "body-2.bin.gz": null,
+          "body-3.bin.gz": null,
+          "body-4.bin.gz": null,
+          "body-5.bin.gz": null,
+          "body-6.bin.gz": null,
+          "body-7.bin.gz": null,
+          "body-8.bin.gz": null,
+          "body-9.bin.gz": null,
+          "body-10.bin.gz": null,
+          "body-11.bin.gz": null,
+          "body-12.bin.gz": null,
+          "body-13.bin.gz": null,
+          "body-14.bin.gz": null,
+          "ATTRIBUTION.md": null,
+          "atlas.json": null
+        },
+        "part-map.json": null
+      },
+      "imports": {
+        "kv-plugin": {
+          "main.pjs": null
+        }
+      }
+    },
+    "countsByKind": {
+      "perchance-lists": 2,
+      "html": 1,
+      "javascript": 4,
+      "markdown": 3,
+      "other": 15,
+      "json": 2
+    },
+    "files": [
+      {
+        "path": "main.pjs",
+        "kind": "perchance-lists",
+        "bytes": 436,
+        "binary": false
+      },
+      {
+        "path": "index.html",
+        "kind": "html",
+        "bytes": 10999,
+        "binary": false
+      },
+      {
+        "path": "src/quiz.js",
+        "kind": "javascript",
+        "bytes": 4127,
+        "binary": false
+      },
+      {
+        "path": "src/README.md",
+        "kind": "markdown",
+        "bytes": 2418,
+        "binary": false
+      },
+      {
+        "path": "src/SPEC.md",
+        "kind": "markdown",
+        "bytes": 2716,
+        "binary": false
+      },
+      {
+        "path": "src/anatomy-data.js",
+        "kind": "javascript",
+        "bytes": 50185,
+        "binary": false
+      },
+      {
+        "path": "src/viewer3d.js",
+        "kind": "javascript",
+        "bytes": 18293,
+        "binary": false
+      },
+      {
+        "path": "src/app.js",
+        "kind": "javascript",
+        "bytes": 12552,
+        "binary": false
+      },
+      {
+        "path": "src/models/body-0.bin.gz",
+        "kind": "other",
+        "bytes": 2257262,
+        "binary": true
+      },
+      {
+        "path": "src/models/body-1.bin.gz",
+        "kind": "other",
+        "bytes": 2299850,
+        "binary": true
+      },
+      {
+        "path": "src/models/body-2.bin.gz",
+        "kind": "other",
+        "bytes": 2312911,
+        "binary": true
+      },
+      {
+        "path": "src/models/body-3.bin.gz",
+        "kind": "other",
+        "bytes": 2079806,
+        "binary": true
+      },
+      {
+        "path": "src/models/body-4.bin.gz",
+        "kind": "other",
+        "bytes": 2075177,
+        "binary": true
+      },
+      {
+        "path": "src/models/body-5.bin.gz",
+        "kind": "other",
+        "bytes": 2176648,
+        "binary": true
+      },
+      {
+        "path": "src/models/body-6.bin.gz",
+        "kind": "other",
+        "bytes": 2378951,
+        "binary": true
+      },
+      {
+        "path": "src/models/body-7.bin.gz",
+        "kind": "other",
+        "bytes": 2385857,
+        "binary": true
+      },
+      {
+        "path": "src/models/body-8.bin.gz",
+        "kind": "other",
+        "bytes": 2382534,
+        "binary": true
+      },
+      {
+        "path": "src/models/body-9.bin.gz",
+        "kind": "other",
+        "bytes": 2259266,
+        "binary": true
+      },
+      {
+        "path": "src/models/body-10.bin.gz",
+        "kind": "other",
+        "bytes": 2249282,
+        "binary": true
+      },
+      {
+        "path": "src/models/body-11.bin.gz",
+        "kind": "other",
+        "bytes": 2319620,
+        "binary": true
+      },
+      {
+        "path": "src/models/body-12.bin.gz",
+        "kind": "other",
+        "bytes": 2268977,
+        "binary": true
+      },
+      {
+        "path": "src/models/body-13.bin.gz",
+        "kind": "other",
+        "bytes": 2165080,
+        "binary": true
+      },
+      {
+        "path": "src/models/body-14.bin.gz",
+        "kind": "other",
+        "bytes": 1344908,
+        "binary": true
+      },
+      {
+        "path": "src/models/ATTRIBUTION.md",
+        "kind": "markdown",
+        "bytes": 2211,
+        "binary": false
+      },
+      {
+        "path": "src/models/atlas.json",
+        "kind": "json",
+        "bytes": 2355242,
+        "binary": false
+      },
+      {
+        "path": "src/part-map.json",
+        "kind": "json",
+        "bytes": 13760,
+        "binary": false
+      },
+      {
+        "path": "imports/kv-plugin/main.pjs",
+        "kind": "perchance-lists",
+        "bytes": 4177,
+        "binary": false
+      }
+    ]
+  },
+  "referenceGraph": [
+    {
+      "from": "index.html",
+      "kind": "script",
+      "ref": "src/app.js",
+      "to": "src/app.js",
+      "external": false,
+      "resolved": true
+    },
+    {
+      "from": "src/quiz.js",
+      "kind": "import",
+      "ref": "./anatomy-data.js",
+      "to": "src/anatomy-data.js",
+      "external": false,
+      "resolved": true
+    },
+    {
+      "from": "src/viewer3d.js",
+      "kind": "import",
+      "ref": "https://esm.sh/three@0.160.0",
+      "to": null,
+      "external": true,
+      "resolved": false
+    },
+    {
+      "from": "src/viewer3d.js",
+      "kind": "import",
+      "ref": "https://esm.sh/three@0.160.0/examples/jsm/controls/OrbitControls.js",
+      "to": null,
+      "external": true,
+      "resolved": false
+    },
+    {
+      "from": "src/viewer3d.js",
+      "kind": "import",
+      "ref": "https://esm.sh/three@0.160.0/examples/jsm/utils/BufferGeometryUtils.js",
+      "to": null,
+      "external": true,
+      "resolved": false
+    },
+    {
+      "from": "src/viewer3d.js",
+      "kind": "import",
+      "ref": "./anatomy-data.js",
+      "to": "src/anatomy-data.js",
+      "external": false,
+      "resolved": true
+    },
+    {
+      "from": "src/viewer3d.js",
+      "kind": "fetch",
+      "ref": "src/models/atlas.json",
+      "to": "src/src/models/atlas.json",
+      "external": false,
+      "resolved": false
+    },
+    {
+      "from": "src/viewer3d.js",
+      "kind": "fetch",
+      "ref": "src/part-map.json",
+      "to": "src/src/part-map.json",
+      "external": false,
+      "resolved": false
+    },
+    {
+      "from": "src/viewer3d.js",
+      "kind": "fetch",
+      "ref": "src/models/body-",
+      "to": "src/src/models/body-",
+      "external": false,
+      "resolved": false
+    },
+    {
+      "from": "src/app.js",
+      "kind": "import",
+      "ref": "./anatomy-data.js",
+      "to": "src/anatomy-data.js",
+      "external": false,
+      "resolved": true
+    },
+    {
+      "from": "src/app.js",
+      "kind": "import",
+      "ref": "./viewer3d.js",
+      "to": "src/viewer3d.js",
+      "external": false,
+      "resolved": true
+    },
+    {
+      "from": "src/app.js",
+      "kind": "import",
+      "ref": "./quiz.js",
+      "to": "src/quiz.js",
+      "external": false,
+      "resolved": true
+    }
+  ],
+  "perchance": {
+    "meta": {
+      "title": "Anatomy Learning — 3D Human Body Explorer",
+      "description": "Interactive 3D anatomy: 150+ structures in EN/ES/Latin, quizzes, flashcards and bookmarks. All unlocked.",
+      "tags": "anatomy, 3d, education, medical, quiz, flashcards, biology"
+    },
+    "lists": [
+      {
+        "name": "appTitle",
+        "kind": "list",
+        "line": 10,
+        "itemLines": 1
+      },
+      {
+        "name": "output",
+        "kind": "list",
+        "line": 13,
+        "itemLines": 1
+      }
+    ],
+    "functions": [],
+    "assignments": [
+      {
+        "name": "kv",
+        "value": "{import:kv-plugin}",
+        "line": 2
+      },
+      {
+        "name": "anatomy",
+        "value": "{import:kv-plugin}",
+        "line": 3
+      }
+    ],
+    "special": [
+      "$meta"
+    ],
+    "signals": {
+      "hasOutput": false,
+      "dynamicMeta": false,
+      "alternations": 0,
+      "weightedItems": 0,
+      "squareBlocks": 1,
+      "thisReferences": 0
+    },
+    "imports": [
+      "kv-plugin"
+    ]
+  },
+  "files": [
+    {
+      "path": "main.pjs",
+      "kind": "perchance-lists",
+      "ext": "pjs",
+      "label": "main.pjs",
+      "binary": false,
+      "bytes": 436,
+      "lines": 15,
+      "role": "Perchance generator definition: random lists, $meta configuration and helper functions.",
+      "perchance": {
+        "bytes": 436,
+        "lines": 15,
+        "lists": [
+          {
+            "name": "appTitle",
+            "kind": "list",
+            "line": 10,
+            "itemLines": 1
+          },
+          {
+            "name": "output",
+            "kind": "list",
+            "line": 13,
+            "itemLines": 1
+          }
+        ],
+        "functions": [],
+        "assignments": [
+          {
+            "name": "kv",
+            "value": "{import:kv-plugin}",
+            "line": 2
+          },
+          {
+            "name": "anatomy",
+            "value": "{import:kv-plugin}",
+            "line": 3
+          }
+        ],
+        "special": [
+          "$meta"
+        ],
+        "imports": [
+          "kv-plugin"
+        ],
+        "meta": {
+          "title": "Anatomy Learning — 3D Human Body Explorer",
+          "description": "Interactive 3D anatomy: 150+ structures in EN/ES/Latin, quizzes, flashcards and bookmarks. All unlocked.",
+          "tags": "anatomy, 3d, education, medical, quiz, flashcards, biology"
+        },
+        "signals": {
+          "hasOutput": false,
+          "dynamicMeta": false,
+          "alternations": 0,
+          "weightedItems": 0,
+          "squareBlocks": 1,
+          "thisReferences": 0
+        }
+      }
+    },
+    {
+      "path": "index.html",
+      "kind": "html",
+      "ext": "html",
+      "label": "index.html",
+      "binary": false,
+      "bytes": 10999,
+      "lines": 137,
+      "role": "Page template / UI markup rendered inside the generator iframe.",
+      "html": {
+        "title": "",
+        "scripts": {
+          "external": [
+            {
+              "src": "src/app.js",
+              "type": "module"
+            }
+          ],
+          "inline": [],
+          "byType": {}
+        },
+        "stylesheets": [],
+        "images": [],
+        "media": [],
+        "iframes": [],
+        "links": [],
+        "ids": [
+          "topBar",
+          "langSeg",
+          "bookmarksBtn",
+          "flashBtn",
+          "weakBtn",
+          "sysTabs",
+          "layout",
+          "browserPane",
+          "searchInput",
+          "resultCount",
+          "browserList",
+          "viewWrap",
+          "viewToolbar",
+          "labelsChk",
+          "xrayChk",
+          "softRange",
+          "rotateChk",
+          "explodeRange",
+          "isolateBtn",
+          "showAllBtn",
+          "resetBtn",
+          "canvasHolder",
+          "viewCanvas",
+          "toast",
+          "loadOverlay",
+          "loadBar",
+          "loadPct",
+          "loadErr",
+          "loadRetry",
+          "quizBar",
+          "quizMeta",
+          "quizRound",
+          "quizScore",
+          "quizPrompt",
+          "quizChoices",
+          "startWordBtn",
+          "startPointBtn",
+          "stopQuizBtn",
+          "detailPane",
+          "dEn",
+          "dLa",
+          "dEs",
+          "dFr",
+          "dSys",
+          "dHist",
+          "dDesc",
+          "dId",
+          "bookmarkBtn",
+          "focusBtn",
+          "quizThisBtn",
+          "bmModal",
+          "bmList",
+          "fcModal",
+          "fcCount",
+          "fcCard",
+          "fcFront",
+          "fcBack",
+          "fcFlip",
+          "fcNext",
+          "fcKnown",
+          "fcShuffle",
+          "resultsModal",
+          "resSummary",
+          "resReview",
+          "resClose"
+        ],
+        "headings": [
+          {
+            "level": 1,
+            "text": "Anatomy Learning"
+          },
+          {
+            "level": 3,
+            "text": "Loading human anatomy…"
+          },
+          {
+            "level": 2,
+            "text": "—"
+          },
+          {
+            "level": 3,
+            "text": "★ Bookmarks"
+          },
+          {
+            "level": 3,
+            "text": "▤ Flashcards"
+          },
+          {
+            "level": 3,
+            "text": "Quiz results"
+          }
+        ],
+        "inlineHandlers": [],
+        "counts": {
+          "scripts": 1,
+          "styles": 1,
+          "forms": 0,
+          "inputs": 6,
+          "buttons": 25,
+          "canvases": 1,
+          "svgs": 0
+        },
+        "fetchCalls": [],
+        "urls": [],
+        "domains": [],
+        "cssUrls": []
+      }
+    },
+    {
+      "path": "src/quiz.js",
+      "kind": "javascript",
+      "ext": "js",
+      "label": "src/quiz.js",
+      "binary": false,
+      "bytes": 4127,
+      "lines": 96,
+      "role": "Client-side logic module (no direct DOM access detected).",
+      "javascript": {
+        "bytes": 4127,
+        "lines": 96,
+        "esImports": [
+          "./anatomy-data.js"
+        ],
+        "dynamicImports": [],
+        "defines": [
+          "shuffle",
+          "createQuiz"
+        ],
+        "windowGlobals": [
+          "shuffle"
+        ],
+        "hasExport": true,
+        "hasModuleExports": false,
+        "fetchCalls": [],
+        "websocketSignals": 0,
+        "domApiHits": 0,
+        "usesLocalStorage": false,
+        "likelyPureLogic": true,
+        "asyncFunctions": 4,
+        "classes": 0
+      }
+    },
+    {
+      "path": "src/README.md",
+      "kind": "markdown",
+      "ext": "md",
+      "label": "src/README.md",
+      "binary": false,
+      "bytes": 2418,
+      "lines": 41,
+      "role": "Documentation.",
+      "markdown": {
+        "bytes": 2418,
+        "lines": 41,
+        "words": 297,
+        "headings": [
+          {
+            "level": 1,
+            "text": "Anatomy Learning — Web Edition (Perchance)"
+          },
+          {
+            "level": 2,
+            "text": "Layout"
+          },
+          {
+            "level": 2,
+            "text": "Run / verify"
+          },
+          {
+            "level": 2,
+            "text": "Content notes"
+          }
+        ],
+        "codeBlocks": 0
+      }
+    },
+    {
+      "path": "src/SPEC.md",
+      "kind": "markdown",
+      "ext": "md",
+      "label": "src/SPEC.md",
+      "binary": false,
+      "bytes": 2716,
+      "lines": 55,
+      "role": "Documentation.",
+      "markdown": {
+        "bytes": 2716,
+        "lines": 55,
+        "words": 388,
+        "headings": [
+          {
+            "level": 1,
+            "text": "SPEC — Anatomy Learning Web Edition"
+          },
+          {
+            "level": 2,
+            "text": "1. Identity"
+          },
+          {
+            "level": 2,
+            "text": "2. Systems (12 tabs + All)"
+          },
+          {
+            "level": 2,
+            "text": "3. Browser (left pane)"
+          },
+          {
+            "level": 2,
+            "text": "4. 3D viewer (center)"
+          },
+          {
+            "level": 2,
+            "text": "5. Detail panel (right)"
+          },
+          {
+            "level": 2,
+            "text": "6. Quiz bar (bottom of viewport)"
+          },
+          {
+            "level": 2,
+            "text": "7. Flashcards + Bookmarks"
+          },
+          {
+            "level": 2,
+            "text": "8. i18n"
+          },
+          {
+            "level": 2,
+            "text": "9. Non-goals (v1)"
+          }
+        ],
+        "codeBlocks": 0
+      }
+    },
+    {
+      "path": "src/anatomy-data.js",
+      "kind": "javascript",
+      "ext": "js",
+      "label": "src/anatomy-data.js",
+      "binary": false,
+      "bytes": 50185,
+      "lines": 236,
+      "role": "Client-side logic module (no direct DOM access detected).",
+      "javascript": {
+        "bytes": 50185,
+        "lines": 236,
+        "esImports": [],
+        "dynamicImports": [],
+        "defines": [
+          "SYSTEMS",
+          "HISTOLOGY",
+          "STRUCTURES",
+          "SYSTEM_OF",
+          "HISTO_OF",
+          "getStructure",
+          "bySystem",
+          "searchStructures"
+        ],
+        "windowGlobals": [],
+        "hasExport": true,
+        "hasModuleExports": false,
+        "fetchCalls": [],
+        "websocketSignals": 0,
+        "domApiHits": 0,
+        "usesLocalStorage": false,
+        "likelyPureLogic": true,
+        "asyncFunctions": 0,
+        "classes": 0
+      }
+    },
+    {
+      "path": "src/viewer3d.js",
+      "kind": "javascript",
+      "ext": "js",
+      "label": "src/viewer3d.js",
+      "binary": false,
+      "bytes": 18293,
+      "lines": 390,
+      "role": "Client-side UI module (uses the DOM or other browser APIs).",
+      "javascript": {
+        "bytes": 18293,
+        "lines": 390,
+        "esImports": [
+          "https://esm.sh/three@0.160.0",
+          "https://esm.sh/three@0.160.0/examples/jsm/controls/OrbitControls.js",
+          "https://esm.sh/three@0.160.0/examples/jsm/utils/BufferGeometryUtils.js",
+          "./anatomy-data.js"
+        ],
+        "dynamicImports": [],
+        "defines": [
+          "SRC_SYS",
+          "SRC_TO_OUR",
+          "SYS_INDEX",
+          "createViewer"
+        ],
+        "windowGlobals": [
+          "SRC_SYS",
+          "SRC_TO_OUR",
+          "SYS_INDEX"
+        ],
+        "hasExport": true,
+        "hasModuleExports": false,
+        "fetchCalls": [
+          "src/models/atlas.json",
+          "src/part-map.json",
+          "src/models/body-"
+        ],
+        "websocketSignals": 0,
+        "domApiHits": 7,
+        "usesLocalStorage": false,
+        "likelyPureLogic": false,
+        "asyncFunctions": 3,
+        "classes": 0
+      }
+    },
+    {
+      "path": "src/app.js",
+      "kind": "javascript",
+      "ext": "js",
+      "label": "src/app.js",
+      "binary": false,
+      "bytes": 12552,
+      "lines": 239,
+      "role": "Client-side UI module (uses the DOM or other browser APIs).",
+      "javascript": {
+        "bytes": 12552,
+        "lines": 239,
+        "esImports": [
+          "./anatomy-data.js",
+          "./viewer3d.js",
+          "./quiz.js"
+        ],
+        "dynamicImports": [],
+        "defines": [
+          "$",
+          "state",
+          "kv",
+          "kvSafe",
+          "nameOf",
+          "descOf",
+          "sysNameOf",
+          "renderTabs",
+          "renderList",
+          "escapeHtml",
+          "select",
+          "renderDetail",
+          "renderQuiz",
+          "showResults",
+          "toggleBookmark",
+          "openBookmarks",
+          "buildDeck",
+          "renderCard",
+          "show",
+          "toast",
+          "boot"
+        ],
+        "windowGlobals": [
+          "__anat",
+          "$",
+          "state",
+          "kv",
+          "kvSafe",
+          "nameOf",
+          "descOf",
+          "sysNameOf",
+          "renderTabs",
+          "renderList",
+          "escapeHtml",
+          "select",
+          "renderDetail",
+          "renderQuiz",
+          "showResults",
+          "openBookmarks",
+          "renderCard",
+          "show",
+          "toast"
+        ],
+        "hasExport": false,
+        "hasModuleExports": false,
+        "fetchCalls": [],
+        "websocketSignals": 0,
+        "domApiHits": 58,
+        "usesLocalStorage": true,
+        "likelyPureLogic": false,
+        "asyncFunctions": 6,
+        "classes": 0
+      }
+    },
+    {
+      "path": "src/models/body-0.bin.gz",
+      "kind": "other",
+      "ext": "gz",
+      "label": "src/models/body-0.bin.gz",
+      "binary": true,
+      "bytes": 2257262,
+      "mime": "application/octet-stream",
+      "role": "Project file.",
+      "hostedAt": "https://user.uploads.dev/file/bd53ae5f0c8d0120556c1e3740d79c52.gz"
+    },
+    {
+      "path": "src/models/body-1.bin.gz",
+      "kind": "other",
+      "ext": "gz",
+      "label": "src/models/body-1.bin.gz",
+      "binary": true,
+      "bytes": 2299850,
+      "mime": "application/octet-stream",
+      "role": "Project file.",
+      "hostedAt": "https://user.uploads.dev/file/cdb55d9042881f047ee43a71b7b64204.gz"
+    },
+    {
+      "path": "src/models/body-2.bin.gz",
+      "kind": "other",
+      "ext": "gz",
+      "label": "src/models/body-2.bin.gz",
+      "binary": true,
+      "bytes": 2312911,
+      "mime": "application/octet-stream",
+      "role": "Project file.",
+      "hostedAt": "https://user.uploads.dev/file/136ac553e048abe46bee05710abfc4da.gz"
+    },
+    {
+      "path": "src/models/body-3.bin.gz",
+      "kind": "other",
+      "ext": "gz",
+      "label": "src/models/body-3.bin.gz",
+      "binary": true,
+      "bytes": 2079806,
+      "mime": "application/octet-stream",
+      "role": "Project file.",
+      "hostedAt": "https://user.uploads.dev/file/bf626fdeba39fd449ec906e36b1d8ed5.gz"
+    },
+    {
+      "path": "src/models/body-4.bin.gz",
+      "kind": "other",
+      "ext": "gz",
+      "label": "src/models/body-4.bin.gz",
+      "binary": true,
+      "bytes": 2075177,
+      "mime": "application/octet-stream",
+      "role": "Project file.",
+      "hostedAt": "https://user.uploads.dev/file/057d7f047eb17f0c9fc4b26852593462.gz"
+    },
+    {
+      "path": "src/models/body-5.bin.gz",
+      "kind": "other",
+      "ext": "gz",
+      "label": "src/models/body-5.bin.gz",
+      "binary": true,
+      "bytes": 2176648,
+      "mime": "application/octet-stream",
+      "role": "Project file.",
+      "hostedAt": "https://user.uploads.dev/file/aa240cc5ba331d40db1003265b3ec3b5.gz"
+    },
+    {
+      "path": "src/models/body-6.bin.gz",
+      "kind": "other",
+      "ext": "gz",
+      "label": "src/models/body-6.bin.gz",
+      "binary": true,
+      "bytes": 2378951,
+      "mime": "application/octet-stream",
+      "role": "Project file.",
+      "hostedAt": "https://user.uploads.dev/file/597247315ce9cf2478b2c692cf31483f.gz"
+    },
+    {
+      "path": "src/models/body-7.bin.gz",
+      "kind": "other",
+      "ext": "gz",
+      "label": "src/models/body-7.bin.gz",
+      "binary": true,
+      "bytes": 2385857,
+      "mime": "application/octet-stream",
+      "role": "Project file.",
+      "hostedAt": "https://user.uploads.dev/file/c1ae824ec0cedc157ca75685e79ee33e.gz"
+    },
+    {
+      "path": "src/models/body-8.bin.gz",
+      "kind": "other",
+      "ext": "gz",
+      "label": "src/models/body-8.bin.gz",
+      "binary": true,
+      "bytes": 2382534,
+      "mime": "application/octet-stream",
+      "role": "Project file.",
+      "hostedAt": "https://user.uploads.dev/file/be42dfb459072de27e591f97fc8a5dd6.gz"
+    },
+    {
+      "path": "src/models/body-9.bin.gz",
+      "kind": "other",
+      "ext": "gz",
+      "label": "src/models/body-9.bin.gz",
+      "binary": true,
+      "bytes": 2259266,
+      "mime": "application/octet-stream",
+      "role": "Project file.",
+      "hostedAt": "https://user.uploads.dev/file/b9cea84ed8ecce0477e596298a823043.gz"
+    },
+    {
+      "path": "src/models/body-10.bin.gz",
+      "kind": "other",
+      "ext": "gz",
+      "label": "src/models/body-10.bin.gz",
+      "binary": true,
+      "bytes": 2249282,
+      "mime": "application/octet-stream",
+      "role": "Project file.",
+      "hostedAt": "https://user.uploads.dev/file/6a1369b142cf116f7a483c5119f30707.gz"
+    },
+    {
+      "path": "src/models/body-11.bin.gz",
+      "kind": "other",
+      "ext": "gz",
+      "label": "src/models/body-11.bin.gz",
+      "binary": true,
+      "bytes": 2319620,
+      "mime": "application/octet-stream",
+      "role": "Project file.",
+      "hostedAt": "https://user.uploads.dev/file/2efd9a2af167c9bf85d9d98cb739a237.gz"
+    },
+    {
+      "path": "src/models/body-12.bin.gz",
+      "kind": "other",
+      "ext": "gz",
+      "label": "src/models/body-12.bin.gz",
+      "binary": true,
+      "bytes": 2268977,
+      "mime": "application/octet-stream",
+      "role": "Project file.",
+      "hostedAt": "https://user.uploads.dev/file/660a267ba5b9939408618d2ae4336bec.gz"
+    },
+    {
+      "path": "src/models/body-13.bin.gz",
+      "kind": "other",
+      "ext": "gz",
+      "label": "src/models/body-13.bin.gz",
+      "binary": true,
+      "bytes": 2165080,
+      "mime": "application/octet-stream",
+      "role": "Project file.",
+      "hostedAt": "https://user.uploads.dev/file/2075ad5ac41b0d9b3a90322772449874.gz"
+    },
+    {
+      "path": "src/models/body-14.bin.gz",
+      "kind": "other",
+      "ext": "gz",
+      "label": "src/models/body-14.bin.gz",
+      "binary": true,
+      "bytes": 1344908,
+      "mime": "application/octet-stream",
+      "role": "Project file.",
+      "hostedAt": "https://user.uploads.dev/file/a2960427c22b0ed91aa0b3faa55782a0.gz"
+    },
+    {
+      "path": "src/models/ATTRIBUTION.md",
+      "kind": "markdown",
+      "ext": "md",
+      "label": "src/models/ATTRIBUTION.md",
+      "binary": false,
+      "bytes": 2211,
+      "lines": 42,
+      "role": "Documentation.",
+      "markdown": {
+        "bytes": 2211,
+        "lines": 42,
+        "words": 256,
+        "headings": [
+          {
+            "level": 1,
+            "text": "3D model attribution (REQUIRED — do not remove)"
+          },
+          {
+            "level": 2,
+            "text": "Provenance of these files"
+          },
+          {
+            "level": 2,
+            "text": "License compliance notes"
+          },
+          {
+            "level": 2,
+            "text": "Deliberately NOT used"
+          }
+        ],
+        "codeBlocks": 0
+      }
+    },
+    {
+      "path": "src/models/atlas.json",
+      "kind": "json",
+      "ext": "json",
+      "label": "src/models/atlas.json",
+      "binary": false,
+      "bytes": 2355242,
+      "lines": 120551,
+      "role": "Data file loaded by the code at runtime.",
+      "json": {
+        "valid": true,
+        "type": "object",
+        "depth": 5,
+        "nodes": 50000,
+        "keys": [
+          "version",
+          "parts",
+          "chunks",
+          "triangles",
+          "concepts",
+          "sourceTriangles",
+          "optimized",
+          "sex",
+          "source",
+          "scope"
+        ],
+        "keyCount": 10
+      }
+    },
+    {
+      "path": "src/part-map.json",
+      "kind": "json",
+      "ext": "json",
+      "label": "src/part-map.json",
+      "binary": false,
+      "bytes": 13760,
+      "lines": 1367,
+      "role": "Data file loaded by the code at runtime.",
+      "json": {
+        "valid": true,
+        "type": "object",
+        "depth": 2,
+        "nodes": 1227,
+        "keys": [
+          "sk_frontal",
+          "sk_parietal",
+          "sk_occipital",
+          "sk_temporal",
+          "sk_sphenoid",
+          "sk_ethmoid",
+          "sk_maxilla",
+          "sk_mandible",
+          "sk_zygomatic",
+          "sk_nasal",
+          "sk_hyoid",
+          "sk_cervical",
+          "sk_thoracic",
+          "sk_lumbar",
+          "sk_sacrum",
+          "sk_coccyx",
+          "sk_sternum",
+          "sk_ribs",
+          "sk_clavicle",
+          "sk_scapula",
+          "sk_humerus",
+          "sk_radius",
+          "sk_ulna",
+          "sk_carpals",
+          "sk_metacarpals",
+          "sk_phalanges_hand",
+          "sk_coxae",
+          "sk_femur",
+          "sk_patella",
+          "sk_tibia",
+          "sk_fibula",
+          "sk_tarsals",
+          "sk_metatarsals",
+          "sk_nasolacrimal",
+          "mu_scm",
+          "mu_trapezius",
+          "mu_deltoid",
+          "mu_pectoralis",
+          "mu_biceps",
+          "mu_triceps",
+          "mu_coracobrachialis",
+          "mu_teresmajor",
+          "mu_transvthoracis",
+          "mu_semispinalis",
+          "mu_levator",
+          "mu_transvperinei",
+          "mu_gluteusmax",
+          "mu_quadriceps",
+          "mu_hamstrings",
+          "mu_iliotibial"
+        ],
+        "keyCount": 139
+      }
+    },
+    {
+      "path": "imports/kv-plugin/main.pjs",
+      "kind": "perchance-lists",
+      "ext": "pjs",
+      "label": "imports/kv-plugin/main.pjs",
+      "binary": false,
+      "bytes": 4177,
+      "lines": 46,
+      "role": "Source of an imported Perchance generator or plugin (read-only dependency).",
+      "perchance": {
+        "bytes": 4177,
+        "lines": 46,
+        "lists": [],
+        "functions": [
+          {
+            "name": "getKv",
+            "params": "",
+            "line": 3
+          }
+        ],
+        "assignments": [],
+        "special": [
+          "$output"
+        ],
+        "imports": [],
+        "meta": {},
+        "signals": {
+          "hasOutput": true,
+          "dynamicMeta": false,
+          "alternations": 1,
+          "weightedItems": 0,
+          "squareBlocks": 12,
+          "thisReferences": 5
+        }
+      }
+    }
+  ],
+  "readingGuide": [
+    "summary / app — what the project is and how it works, in plain language.",
+    "extraction.pipeline — the exact steps and endpoints used to obtain these files.",
+    "extraction.caveats — anything missing or reformatted in this extraction.",
+    "referenceGraph[] — which file references which other file (script/stylesheet/image/import/fetch/url). external=true points outside the project; resolved=false with external=false is a dangling reference.",
+    "files[] — one entry per file with a language-specific analysis (lists, imports, globals, DOM usage, JSON shape, CSS metrics…).",
+    "perchance — parsed view of main.pjs: $meta, lists, functions and templating signals."
+  ]
+}

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anatomy Learning — 3D Human Body Explorer</title>
+<meta name="description" content="Free interactive 3D anatomy explorer: 2,200+ real meshes, 150+ structures in English, Spanish, French and Latin, with quizzes, flashcards and bookmarks. No account, no paywall.">
+<meta property="og:title" content="Anatomy Learning — 3D Human Body Explorer">
+<meta property="og:description" content="Free interactive 3D anatomy: 12 body systems, 4 languages, quizzes and flashcards. Open source, no account.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0a1220">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%234dd0e1'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%230a1220'/%3E%3C/svg%3E">
+<script type="importmap">
+{
+  "imports": {
+    "three": "./src/vendor/three.module.js",
+    "three/addons/": "./src/vendor/addons/"
+  }
+}
+</script>
+<style>
+  html { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, "Segoe UI", Roboto, sans-serif; background:#0a1220; color:#eaf2ff; text-align:left; }
+  #topBar { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:10px 14px; background:linear-gradient(180deg,#101d33,#0a1220); border-bottom:1px solid #1e3a5f; position:sticky; top:0; z-index:5; }
+  .brand { display:flex; gap:10px; align-items:center; } .logo { font-size:28px; color:#4dd0e1; }
+  .brand h1 { font-size:18px; margin:0; } .brand p { margin:0; font-size:12px; color:#9fb4d0; }
+  .topActions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  button { background:#16345c; color:#eaf2ff; border:1px solid #2b5a8f; border-radius:10px; padding:8px 12px; cursor:pointer; font-size:14px; }
+  button:hover { background:#1d4474; } button:disabled { opacity:.45; cursor:default; }
+  button.ghost { background:transparent; } .tab.on, #langSeg button.on { background:#0e7d90; border-color:#4dd0e1; }
+  #langSeg { display:flex; } #langSeg button { border-radius:0; } #langSeg button:first-child { border-radius:10px 0 0 10px; } #langSeg button:last-child { border-radius:0 10px 10px 0; }
+  #sysTabs { display:flex; gap:6px; overflow-x:auto; padding:8px 12px; border-bottom:1px solid #1e3a5f; background:#0c1628; }
+  #sysTabs .tab { white-space:nowrap; font-size:13px; padding:6px 10px; }
+  #layout { display:grid; grid-template-columns: 300px 1fr 300px; gap:10px; padding:10px 12px 20px; height: calc(100vh - 145px); min-height:560px; }
+  #browserPane, #detailPane { background:#0e1930; border:1px solid #1e3a5f; border-radius:14px; padding:10px; display:flex; flex-direction:column; min-height:0; overflow:hidden; }
+  #detailPane { overflow-y:auto; }
+  #searchInput { width:100%; padding:10px 12px; border-radius:10px; border:1px solid #2b5a8f; background:#0a1428; color:#eaf2ff; font-size:14px; }
+  .muted { color:#9fb4d0; font-size:12px; margin:6px 2px; }
+  #browserList { overflow-y:auto; flex:1; min-height:0; display:flex; flex-direction:column; gap:4px; padding-bottom:20px; }
+  .row { display:flex; align-items:center; gap:8px; text-align:left; background:#101f38; font-size:13px; }
+  .row.on { border-color:#4dd0e1; background:#134a5e; } .row .nm small { display:block; color:#9fb4d0; font-size:11px; font-style:italic; }
+  .dot { width:10px; height:10px; border-radius:50%; flex:none; } .bm { margin-left:auto; color:#ffd54f; }
+  #viewWrap { display:flex; flex-direction:column; gap:8px; min-width:0; }
+  #viewToolbar { display:flex; gap:8px; align-items:center; flex-wrap:wrap; background:#0e1930; border:1px solid #1e3a5f; border-radius:14px; padding:8px 10px; font-size:13px; }
+  #viewToolbar label { display:flex; gap:5px; align-items:center; color:#cfe0f5; }
+  .explode, .soft { display:flex; gap:6px; align-items:center; }
+  #canvasHolder { position:relative; background:radial-gradient(120% 100% at 50% 0%, #14294a 0%, #0a1220 70%); border:1px solid #1e3a5f; border-radius:14px; overflow:hidden; height:52vh; min-height:380px; }
+  #viewCanvas { width:100%; height:100%; display:block; touch-action:none; }
+  #toast { position:absolute; left:50%; bottom:12px; transform:translateX(-50%); background:#062b36; border:1px solid #4dd0e1; padding:8px 14px; border-radius:20px; font-size:13px; z-index:3; }
+  #loadOverlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(6,12,24,.82); z-index:2; }
+  #loadOverlay[hidden] { display:none; }
+  .loadBox { text-align:center; max-width:340px; padding:20px; } .loadBox h3 { margin:0 0 12px; }
+  .loadTrack { height:10px; background:#101f38; border:1px solid #2b5a8f; border-radius:6px; overflow:hidden; }
+  #loadBar { height:100%; width:0%; background:linear-gradient(90deg,#0e7d90,#4dd0e1); transition:width .2s; }
+  #loadPct { margin:8px 0; font-size:13px; color:#9fe8ff; }
+  #loadErr { background:#3a1414; border:1px solid #f87171; border-radius:10px; padding:10px; margin:10px 0; font-size:13px; }
+  #quizBar { background:#0e1930; border:1px solid #1e3a5f; border-radius:14px; padding:10px; }
+  #quizMeta { display:flex; justify-content:space-between; font-size:12px; color:#9fb4d0; margin-bottom:4px; }
+  #quizPrompt { font-size:15px; margin:2px 0 8px; } #quizPrompt small { color:#9fb4d0; }
+  #quizChoices { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:8px; }
+  #quizChoices:empty { display:none; }
+  .choice.ok { background:#14532d; border-color:#4ade80; } .choice.bad { background:#5b1a1a; border-color:#f87171; }
+  .quizBtns { display:flex; gap:6px; flex-wrap:wrap; }
+  #detailPane h2 { margin:4px 0 0; font-size:22px; } .latin { font-style:italic; color:#ffd54f; } .es { color:#9fe8ff; } .fr { color:#c3f59b; }
+  .chips { display:flex; gap:6px; margin:8px 0; flex-wrap:wrap; } .chip { border:1px solid #4dd0e1; border-radius:20px; padding:3px 10px; font-size:12px; }
+  #dDesc { line-height:1.5; font-size:14px; } .dBtns { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+  .hint { margin-top:auto; padding-top:12px; font-size:12px; color:#9fb4d0; line-height:1.5; }
+  .modal { position:fixed; inset:0; background:rgba(3,8,18,.7); display:flex; align-items:center; justify-content:center; z-index:20; padding:16px; }
+  .modal[hidden] { display:none; }
+  .sheet { background:#0e1930; border:1px solid #2b5a8f; border-radius:16px; max-width:520px; width:100%; max-height:84vh; overflow:auto; padding:14px; }
+  .sheetHead { display:flex; align-items:center; gap:10px; } .sheetHead h3 { margin:0; flex:1; }
+  #fcCard { background:#101f38; border:1px solid #2b5a8f; border-radius:14px; min-height:170px; display:flex; flex-direction:column; gap:8px; align-items:center; justify-content:center; padding:22px; margin:10px 0; cursor:pointer; text-align:center; }
+  #fcFront { font-size:24px; font-weight:700; } .rev { padding:8px 10px; border-radius:8px; background:#101f38; margin:4px 0; cursor:pointer; } .rev.bad { border:1px solid #f87171; }
+  @media (max-width: 1080px) {
+    #layout { grid-template-columns: 1fr 1fr; } #detailPane { grid-column: 1 / -1; }
+    #canvasHolder { height:46vh; }
+  }
+  @media (max-width: 700px) {
+    #layout { grid-template-columns: 1fr; height:auto; } .hideS { display:none; }
+    #browserList { max-height:42vh; } #canvasHolder { height:44vh; min-height:300px; }
+    #quizChoices { grid-template-columns:1fr; } #canvasHolder { height:44vh; min-height:300px; }
+    .brand p { display:none; }
+  }
+</style>
+</head>
+<body>
+<header id="topBar">
+  <div class="brand"><span class="logo" aria-hidden="true">◉</span><div><h1>Anatomy Learning</h1><p>3D Human Body Explorer · 100% free, no account</p></div></div>
+  <div class="topActions">
+    <div id="langSeg" role="group" aria-label="Language">
+      <button data-lang="en" class="on">EN</button><button data-lang="es">ES</button><button data-lang="fr">FR</button><button data-lang="la">LAT</button>
+    </div>
+    <button id="bookmarksBtn" title="Bookmarks">★ <span class="hideS">Saved</span></button>
+    <button id="flashBtn" title="Flashcards">▤ <span class="hideS">Cards</span></button>
+    <button id="weakBtn" title="Practice mistakes">⟳ <span class="hideS">Review</span></button>
+  </div>
+</header>
+<nav id="sysTabs" role="tablist" aria-label="Body systems"></nav>
+<main id="layout">
+  <aside id="browserPane" aria-label="Structure browser">
+    <input id="searchInput" type="search" placeholder="Search — EN / ES / FR / Latin…  (e.g. femur, corazón, fémur, vagus)" autocomplete="off" aria-label="Search structures">
+    <div id="resultCount" class="muted">…</div>
+    <div id="browserList" role="list"></div>
+  </aside>
+  <section id="viewWrap" aria-label="3D viewer">
+    <div id="viewToolbar">
+      <label><input type="checkbox" id="labelsChk" checked> Labels</label>
+      <label><input type="checkbox" id="xrayChk"> X-ray bones</label>
+      <label class="soft">Muscles <input type="range" id="softRange" min="0.03" max="1" step="0.01" value="1" title="Muscle/skin transparency"></label>
+      <label><input type="checkbox" id="rotateChk"> Spin</label>
+      <label class="explode">Explode <input type="range" id="explodeRange" min="0" max="1" step="0.01" value="0"></label>
+      <button id="isolateBtn">Isolate system</button>
+      <button id="showAllBtn">Full body</button>
+      <button id="resetBtn">Reset view</button>
+    </div>
+    <div id="canvasHolder">
+      <canvas id="viewCanvas" role="img" aria-label="Interactive 3D human body model. Use the structure list to explore anatomy without the 3D view."></canvas>
+      <div id="toast" hidden></div>
+      <div id="loadOverlay"><div class="loadBox"><h3>Loading human anatomy…</h3>
+        <div class="loadTrack"><div id="loadBar"></div></div>
+        <div id="loadPct">0%</div>
+        <p class="muted">2,234 real meshes · BodyParts3D (CC BY 4.0) · educational, not clinical</p>
+        <div id="loadErr" hidden></div><button id="loadRetry" hidden>Retry</button>
+      </div></div>
+    </div>
+    <div id="quizBar">
+      <div id="quizMeta"><span id="quizRound">Quiz ready</span><span id="quizScore">Score 0</span></div>
+      <div id="quizPrompt">Pick a quiz mode to test yourself on the 3D body.</div>
+      <div id="quizChoices"></div>
+      <div class="quizBtns">
+        <button id="startWordBtn">▶ Find the word</button>
+        <button id="startPointBtn">▶ Find the point</button>
+        <button id="stopQuizBtn" class="ghost">Stop</button>
+      </div>
+    </div>
+  </section>
+  <aside id="detailPane" aria-label="Structure details">
+    <h2 id="dEn">—</h2>
+    <div id="dLa" class="latin">—</div>
+    <div id="dEs" class="es">—</div>
+    <div id="dFr" class="fr">—</div>
+    <div class="chips"><span id="dSys" class="chip">—</span><span id="dHist" class="chip">—</span></div>
+    <p id="dDesc">—</p>
+    <div id="dId" class="muted">—</div>
+    <div class="dBtns">
+      <button id="bookmarkBtn">☆ Bookmark</button>
+      <button id="focusBtn">◎ Focus</button>
+      <button id="quizThisBtn">? Quiz this system</button>
+    </div>
+    <div class="hint">Drag to orbit · scroll to zoom · click any bone, muscle or organ. Bookmarks, quiz scores and cards are saved on this device. 3D models: BodyParts3D 4.0 (CC BY 4.0) — educational, not clinical.</div>
+  </aside>
+</main>
+<div id="bmModal" class="modal" hidden><div class="sheet"><div class="sheetHead"><h3>★ Bookmarks</h3><button data-close>✕</button></div><div id="bmList"></div></div></div>
+<div id="fcModal" class="modal" hidden><div class="sheet"><div class="sheetHead"><h3>▤ Flashcards</h3><span id="fcCount" class="muted"></span><button data-close>✕</button></div>
+  <div id="fcCard"><div id="fcFront"></div><div id="fcBack" class="muted"></div></div>
+  <div class="quizBtns"><button id="fcFlip">Flip</button><button id="fcNext">Next →</button><button id="fcKnown" class="ghost">✓ Known</button><button id="fcShuffle" class="ghost">Shuffle</button></div>
+</div></div>
+<div id="resultsModal" class="modal" hidden><div class="sheet"><div class="sheetHead"><h3>Quiz results</h3><button data-close>✕</button></div><p id="resSummary"></p><div id="resReview"></div><button id="resClose">Continue studying</button></div></div>
+<script type="module" src="src/app.js"></script>
+</body>
+</html>
