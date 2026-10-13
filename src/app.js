@@ -9,7 +9,7 @@ const kvSafe = storage;
 const state = {
   sys: "all", view: "systems", lang: "en", selected: null,
   bookmarks: [], collapsed: new Set(), theme: "midnight", navIdx: -1,
-  sizes: { bw: 272, dw: 296, ch: 0 }, focus: false, // ch = 0 → auto-fill
+  sizes: { bw: 272, dw: 296, ch: 0 }, focus: false, anim: true, // ch = 0 → auto-fill
 };
 const nameOf = (st) => state.lang === "la" ? st.la : state.lang === "es" ? st.es : state.lang === "fr" ? (st.fr || st.en) : st.en;
 const descOf = (st) => state.lang === "es" ? st.de : state.lang === "fr" ? (st.df || st.d) : st.d;
@@ -355,6 +355,8 @@ function toast(msg) { const t = $("toast"); t.textContent = msg; t.hidden = fals
 async function boot() {
   state.theme = (await kvSafe.get("theme")) || "midnight";
   await applyTheme(state.theme, false);
+  const animPref = await kvSafe.get("anim");
+  state.anim = animPref === null || animPref === undefined ? true : !!animPref;
   state.bookmarks = (await kvSafe.get("bookmarks")) || [];
   Object.assign(state.sizes, (await kvSafe.get("layout")) || {});
   applyLayout();
@@ -392,6 +394,8 @@ async function boot() {
   $("loadRetry").onclick = () => location.reload();
   quiz = createQuiz({ viewer, meshIds: () => viewer.meshIds(), kv: kvSafe, onEvent: renderQuiz });
   window.__anat = { viewer, quiz, state, select, renderList, setFocus, applyLayout };
+  $("animChk").checked = state.anim;
+  viewer.setAnimate(state.anim);
   select(state.selected || "cv_heart", false);
   renderQuiz(quiz.Q, false);
 
@@ -424,6 +428,7 @@ async function boot() {
   // toolbar
   $("labelsChk").onchange = (e) => viewer.setLabels(e.target.checked);
   $("xrayChk").onchange = (e) => viewer.setXray(e.target.checked);
+  $("animChk").onchange = (e) => { state.anim = e.target.checked; viewer.setAnimate(state.anim); kvSafe.set("anim", state.anim); };
   $("softRange").oninput = (e) => viewer.setSoftOpacity(parseFloat(e.target.value));
   $("rotateChk").onchange = (e) => viewer.setAutoRotate(e.target.checked);
   $("explodeRange").oninput = (e) => viewer.setExplode(parseFloat(e.target.value));

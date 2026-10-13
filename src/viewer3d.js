@@ -33,6 +33,9 @@ const TIER3 = ["sensory", "endocrine", "lymphatic", "reproductive"];
 const SYSTEM_ORDER = [...TIER1, ...TIER2, ...TIER3];
 const SYSTEM_RANK = new Map(SYSTEM_ORDER.map((s, i) => [s, i]));
 
+// Organs extracted into their own pulsing mesh (beating heart, breathing lungs).
+const ORGAN_IDS = { cardiac: ["cv_heart", "cv_aortic_valve", "cv_mitral"], respiratory: ["re_lungs"] };
+
 export function createViewer(canvas, opts = {}) {
   const { onPick, onProgress, onError } = opts;
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true, alpha: true });
@@ -84,6 +87,9 @@ export function createViewer(canvas, opts = {}) {
   const partCenter = [];   // per-part Vector3
   const sysOfPart = [];    // source system per part
   const merged = new Map();// srcSys -> Mesh
+  const organs = new Map(); // srcSys -> pulsing organ Mesh (heart, lungs)
+  const organParts = new Map(); // srcSys -> Set(partIdx) kept out of the merged mesh
+  let animOn = true;
   const pickers = [];      // per-part invisible Mesh (null until its system loads)
   const keepAlive = new Map(); // srcSys -> ArrayBuffer (picker views reference them)
   const hlCache = new Map();// ourId -> BufferGeometry (merged subset)
@@ -104,6 +110,37 @@ export function createViewer(canvas, opts = {}) {
   // systems faded by the "Muscles" slider (bulk that hides the skeleton)
   const SOFT_GROUP = new Set(["muscular", "connective", "integumentary"]);
   let softF = 1; // muscle/skin opacity 0..1
+
+  // "Living flow": a moving emissive band travels along these systems so
+  // blood, nerve signals and digestion visibly pulse. Purely cosmetic —
+  // the band is driven by object-space height, no per-frame CPU work.
+  const FLOW = {
+    arterial: { col: "#ff9a76", speed: 1.15, dir: -1, amp: 0.5, freq: 2.3 },
+    venous: { col: "#7fc6ff", speed: 0.7, dir: 1, amp: 0.38, freq: 2.0 },
+    nervous: { col: "#ffe89a", speed: 0.95, dir: -1, amp: 0.32, freq: 3.1 },
+    digestive: { col: "#ffbe73", speed: 0.26, dir: 1, amp: 0.32, freq: 1.7 },
+  };
+  function attachFlow(m, cfg) {
+    m.userData.flow = cfg;
+    m.onBeforeCompile = (shader) => {
+      shader.uniforms.uTime = { value: 0 };
+      shader.uniforms.uFlow = { value: new THREE.Vector3(cfg.speed, cfg.dir, animOn ? cfg.amp : 0) };
+      shader.uniforms.uFlowCol = { value: new THREE.Color(cfg.col) };
+      shader.uniforms.uFreq = { value: cfg.freq };
+      shader.vertexShader = shader.vertexShader
+        .replace("#include <common>", "#include <common>\nvarying float vFlowY;")
+        .replace("#include <begin_vertex>", "#include <begin_vertex>\nvFlowY = position.y;");
+      shader.fragmentShader = shader.fragmentShader
+        .replace("#include <common>", "#include <common>\nvarying float vFlowY;\nuniform float uTime;\nuniform vec3 uFlow;\nuniform vec3 uFlowCol;\nuniform float uFreq;")
+        .replace("#include <emissivemap_fragment>", `#include <emissivemap_fragment>
+{
+  float w = fract(vFlowY * uFreq - uTime * uFlow.x * uFlow.y);
+  float band = pow(smoothstep(0.55, 1.0, w), 4.0);
+  totalEmissiveRadiance += uFlowCol * band * uFlow.z;
+}`);
+      m.userData.shader = shader;
+    };
+  }
   function materialFor(src) {
     const col = (SRC_SYS.find(([s]) => s === src) || [])[1] || "#aebbb8";
     const base = src === "integumentary" ? 0.12 : 1;
@@ -114,6 +151,7 @@ export function createViewer(canvas, opts = {}) {
     });
     m.userData.src = src;
     m.userData.base = base;
+    if (FLOW[src]) attachFlow(m, FLOW[src]);
     return m;
   }
   function applyOpacities() {
@@ -135,6 +173,7 @@ export function createViewer(canvas, opts = {}) {
       const our = SRC_TO_OUR[src];
       mesh.visible = !isolatedOur || our === isolatedOur;
     }
+    for (const [src, om] of organs) om.visible = !isolatedOur || SRC_TO_OUR[src] === isolatedOur;
     if (highlight) {
       const st = getStructure(selected);
       highlight.visible = !isolatedOur || (st && st.s === isolatedOur);
@@ -148,6 +187,7 @@ export function createViewer(canvas, opts = {}) {
       sysOffset.set(src, new THREE.Vector3(Math.sin(a) * explodeF * 0.55, (explodeF * 0.12) * ((i % 3) - 1), Math.cos(a) * explodeF * 0.55));
     });
     for (const [src, mesh] of merged) mesh.position.copy(sysOffset.get(src));
+    for (const [src, om] of organs) om.position.copy(om.userData.center).add(sysOffset.get(src));
     for (const pk of pickers) if (pk) pk.position.copy(sysOffset.get(sysOfPart[pk.userData.part]));
     if (highlight && selected) {
       const parts = partMap[selected] || [];
@@ -285,7 +325,8 @@ export function createViewer(canvas, opts = {}) {
     } else loadQueue.push(sys);
   }
   function buildSystem(sys, buf) {
-    const geos = [];
+    const geos = [], organGeos = [];
+    const orgSet = organParts.get(sys);
     atlas.parts.forEach((p, i) => {
       if (p.chunk !== sys) return;
       const g = new THREE.BufferGeometry();
@@ -297,9 +338,9 @@ export function createViewer(canvas, opts = {}) {
       const pk = new THREE.Mesh(g);
       pk.matrixAutoUpdate = false; pk.userData.part = i; pk.visible = false;
       pickers[i] = pk; scene.add(pk);
-      geos.push(g);
+      (orgSet && orgSet.has(i) ? organGeos : geos).push(g);
     });
-    const mergedGeo = mergeGeometries(geos, false);
+    const mergedGeo = geos.length ? mergeGeometries(geos, false) : null;
     if (!mergedGeo) throw new Error("Could not assemble " + sys + " anatomy.");
     const mesh = new THREE.Mesh(mergedGeo, mats.get(sys));
     mesh.frustumCulled = false;
@@ -307,6 +348,22 @@ export function createViewer(canvas, opts = {}) {
     mesh.visible = !isolatedOur || SRC_TO_OUR[sys] === isolatedOur;
     scene.add(mesh);
     merged.set(sys, mesh);
+    // Organ mesh (heart / lungs): geometry translated so the mesh origin
+    // sits at the organ centre — scaling then pulses it in place.
+    if (organGeos.length) {
+      const og = mergeGeometries(organGeos, false);
+      const c = new THREE.Box3();
+      orgSet.forEach((i) => c.expandByPoint(partCenter[i]));
+      const ctr = c.getCenter(new THREE.Vector3());
+      og.translate(-ctr.x, -ctr.y, -ctr.z);
+      const om = new THREE.Mesh(og, mats.get(sys));
+      om.frustumCulled = false;
+      om.userData.center = ctr;
+      om.position.copy(ctr).add(sysOffset.get(sys) || new THREE.Vector3());
+      om.visible = mesh.visible;
+      scene.add(om);
+      organs.set(sys, om);
+    }
     loadedSystems.add(sys);
     checkCoreDone();
   }
@@ -368,6 +425,11 @@ export function createViewer(canvas, opts = {}) {
     });
     for (const [ourId, parts] of Object.entries(partMap))
       for (const pi of parts) if (ourOfPart[pi] === undefined) ourOfPart[pi] = ourId;
+    for (const [sys, ids] of Object.entries(ORGAN_IDS)) {
+      const set = new Set();
+      for (const id of ids) for (const pi of partMap[id] || []) if (sysOfPart[pi] === sys) set.add(pi);
+      if (set.size) organParts.set(sys, set);
+    }
     totalBytes = atlas.chunks.reduce((a, c) => a + (c.gzipBytes || 0), 0);
     SYSTEM_ORDER.forEach((s) => enqueue(s));
     emitProgress();
@@ -413,9 +475,11 @@ export function createViewer(canvas, opts = {}) {
   function select(id) {
     selected = id;
     const parts = (partMap && partMap[id]) || [];
-    const sys = parts.length ? sysOfPart[parts[0]] : null;
-    if (sys && !loadedSystems.has(sys)) {
-      ensureSystem(sys).then(() => { if (selected === id) { buildHighlight(); refreshLabels(); } }).catch(() => {});
+    // one card can span several source systems (bone + cartilage + muscle)
+    const sysList = [...new Set(parts.map((pi) => sysOfPart[pi]).filter(Boolean))];
+    const pending = sysList.filter((s) => !loadedSystems.has(s));
+    if (pending.length) {
+      Promise.all(pending.map(ensureSystem)).then(() => { if (selected === id) { buildHighlight(); refreshLabels(); } }).catch(() => {});
       refreshLabels(); // labels work from atlas bounds, even before meshes arrive
       return id;
     }
@@ -450,9 +514,30 @@ export function createViewer(canvas, opts = {}) {
   // The layout is user-resizable (splitter drags, focus mode), so watch the
   // canvas itself — window resize events alone no longer cover size changes.
   if (typeof ResizeObserver !== "undefined") new ResizeObserver(resize).observe(canvas);
+  // ── living anatomy: beating heart, breathing lungs, flow bands ──
+  function tickAnims(t) {
+    if (!animOn) return;
+    const heart = organs.get("cardiac");
+    if (heart) {
+      const beat = (t * 1.2) % 1; // ~72 bpm
+      let s = 0;
+      if (beat < 0.17) s = Math.sin((beat / 0.17) * Math.PI);                    // systole
+      else if (beat < 0.36) s = 0.28 * Math.sin(((beat - 0.17) / 0.19) * Math.PI); // weaker rebound
+      heart.scale.setScalar(1 + 0.05 * s);
+    }
+    const lungs = organs.get("respiratory");
+    if (lungs) {
+      const br = 0.5 - 0.5 * Math.cos(t * Math.PI * 2 * (14 / 60)); // ~14 breaths/min
+      const k = 1 + 0.04 * br;
+      lungs.scale.set(k, k * (1 + 0.015 * br), k);
+      const c = lungs.userData.center, off = sysOffset.get("respiratory");
+      lungs.position.set(c.x + (off ? off.x : 0), c.y + 0.012 * br + (off ? off.y : 0), c.z + (off ? off.z : 0));
+    }
+    for (const m of mats.values()) if (m.userData.shader) m.userData.shader.uniforms.uTime.value = t;
+  }
   (function loop() {
     requestAnimationFrame(loop);
-    healCamera(); controls.update(); renderer.render(scene, camera);
+    healCamera(); controls.update(); tickAnims(performance.now() / 1000); renderer.render(scene, camera);
   })();
   applyVisibility();
 
@@ -467,6 +552,21 @@ export function createViewer(canvas, opts = {}) {
     },
     setSoftOpacity(f) { softF = Math.min(1, Math.max(0.03, f)); applyOpacities(); },
     setExplode(f) { explodeF = f; if (atlas) applyExplode(); },
+    setAnimate(b) {
+      animOn = b;
+      for (const m of mats.values()) {
+        if (m.userData.flow && m.userData.shader) m.userData.shader.uniforms.uFlow.value.z = b ? m.userData.flow.amp : 0;
+      }
+      if (!b) {
+        const heart = organs.get("cardiac");
+        if (heart) heart.scale.setScalar(1);
+        const lungs = organs.get("respiratory");
+        if (lungs) {
+          lungs.scale.setScalar(1);
+          lungs.position.copy(lungs.userData.center).add(sysOffset.get("respiratory") || new THREE.Vector3());
+        }
+      }
+    },
     setLabels(b) { labelsOn = b; refreshLabels(); },
     setLang(l) { labelLang = l; refreshLabels(); },
     setAutoRotate(b) { controls.autoRotate = b; controls.autoRotateSpeed = 0.8; },
@@ -481,6 +581,6 @@ export function createViewer(canvas, opts = {}) {
     isReady: () => ready,
     coreReady: () => coreDone,
     loadedSystems: () => [...loadedSystems],
-    _debug: { camera, controls, renderer, scene },
+    _debug: { camera, controls, renderer, scene, organs },
   };
 }

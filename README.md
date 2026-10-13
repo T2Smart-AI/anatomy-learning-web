@@ -10,11 +10,12 @@ Free, open-source, interactive 3D anatomy for everybody. No account, no paywall,
 
 - **Real 3D anatomy** — 2,234 meshes from the open BodyParts3D 4.0 dataset, rendered with Three.js
 - **12 body systems** — skeletal, muscular, cardiovascular, nervous, respiratory, digestive, urinary, reproductive, lymphatic, endocrine, integumentary + sectional notes
-- **209 structures** with names and descriptions in **English, Spanish, French and Latin** — every clickable 3D mesh has a proper entry
+- **209 structures** with names and descriptions in **English, Spanish, French and Latin** — and *nothing is a dead click*: every one of the 2,234 mesh areas selects its closest related card (159 cards carry real geometry, `3D` vs `ref` badges show which)
 - **Easy browsing** — group by *system → subgroup* (Skull, Vertebrae, Thoracic cage, Upper limb…), by *body region* (Head & neck, Thorax, Abdomen, Limbs…), or flat A–Z; collapsible groups with counts; `3D` / `ref` badges show which entries have a model
 - **Global search** — one search across all systems and all 4 languages, with instant results and keyboard navigation (`/` search · `↑` `↓` browse · `Enter` focus · `Esc` close)
 - **Three polished themes** — Midnight (dark), Pearl (light) and Pop (playful), each with its own generated background texture; remembered per device
 - **Resizable, maximizable viewer** — the 3D canvas fills its column by default; drag the edge handles or the grip under the canvas to resize, and hit **⛶** (or double-click the grip) for a huge focus view with the side panels hidden — `Esc` restores. Your layout is remembered per device
+- **Living anatomy** — toggle **❤ Animate** (on by default): the heart beats at ~72 bpm, the lungs breathe at ~14 breaths/min, and emissive pulses travel along the arteries (blood flow), veins, nerves (signals) and gut (peristalsis)
 - **Interactions** — orbit/zoom/pan, click-to-select with system-colored highlight, labels, isolate system, X-ray bones, muscle/skin transparency, exploded view
 - **Quizzes** — *Find the word* and *Find the point*, scoring, streaks, mistake review
 - **Flashcards & bookmarks** — saved on your device (localStorage)

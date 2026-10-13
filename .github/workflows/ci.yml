@@ -16,6 +16,8 @@ jobs:
           node-version: 22
       - name: Repack pipeline is idempotent
         run: node tools/repack-by-system.mjs
+      - name: Every atlas part is clickable (no dead clicks)
+        run: node tools/extend-part-map.mjs --check
 
   smoke-test:
     runs-on: ubuntu-latest
